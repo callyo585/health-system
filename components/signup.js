@@ -80,15 +80,6 @@ export default class Login extends React.Component {
     return options;
   };
 
-  inputValidation(state) {
-    if (state.password != state.confirmPass) {
-      this.setState({ error: "Password does not match!" });
-      return false;
-    }
-
-    return true;
-  }
-
   handleSubmit = event => {
     event.preventDefault();
 
@@ -111,13 +102,14 @@ export default class Login extends React.Component {
     firebase
       .auth()
       .createUserWithEmailAndPassword(signUp.email, signUp.password)
-      .then(
+      .then(response => {
         firebase
           .firestore()
           .collection("users")
           .doc()
-          .set(signUp)
-      )
+          .set(signUp);
+        console.log("user created successfully");
+      })
       .catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -140,11 +132,11 @@ export default class Login extends React.Component {
       <div className="modal" id="signup">
         <div className="modal-background" onClick={this.closeSignup}></div>
         <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">Register</p>
+            <button className="delete" aria-label="close" onClick={this.closeSignup}></button>
+          </header>
           <form onSubmit={this.handleSubmit}>
-            <header className="modal-card-head">
-              <p className="modal-card-title">Register</p>
-              <button className="delete" aria-label="close" onClick={this.closeSignup}></button>
-            </header>
             <section className="modal-card-body">
               <div className="columns is-mobile">
                 <div className="column is-one-fifth">
