@@ -34,6 +34,17 @@ export default class Login extends React.Component {
     });
   }
 
+  async componentWillUnmount() {
+    const response = await fetch("https://restcountries.eu/rest/v2/all?fields=name;alpha3Code;");
+    const getCountriesStatus = response.status > 200 ? response.status : false;
+    const getCountries = await response.json();
+
+    this.setState({
+      countries: getCountries,
+      statusCountries: getCountriesStatus
+    });
+  }
+
   closeSignup = () => {
     document.getElementById("signup").classList.remove("is-active");
   };
@@ -106,11 +117,11 @@ export default class Login extends React.Component {
         firebase
           .firestore()
           .collection("users")
-          .doc()
+          .doc(signUp.email)
           .set(signUp);
         console.log("user created successfully");
       })
-      .catch(function(error) {
+      .catch(error => {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;

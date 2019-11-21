@@ -1,3 +1,5 @@
+import Router from "next/router";
+
 export default class Login extends React.Component {
   state = {
     email: "",
@@ -13,23 +15,39 @@ export default class Login extends React.Component {
 
     const { firebase } = this.props;
     const userData = this.state;
-    console.log(userData);
     const login = {
       email: userData.email,
       password: userData.password
     };
+
+    document.getElementById("button").classList.add("is-loading");
+    document.getElementById("loginButton").classList.add("is-loading");
+
     firebase
       .auth()
-      .signInWithEmailAndPassword(login.email, login.password)
-      .then(response => {
-        console.log("user has logged in");
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(async () => {
+        // Existing and future Auth states are now persisted in the current
+        // session only. Closing the window would clear any existing state even
+        // if a user forgets to sign out.
+        // ...
+        // New sign-in will be persisted with session persistence.
+        const response = await firebase
+          .auth()
+          .signInWithEmailAndPassword(login.email, login.password)
+          .then(response => {
+            console.log("user has logged in successfully");
+            document.getElementById("login").classList.remove("is-active");
+            document.getElementById("button").classList.remove("is-loading");
+            Router.push("/dotprobe");
+          });
+        return response;
       })
-      .catch(function(error) {
+      .catch(error => {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
         console.error("Status ", errorCode, " : ", errorMessage);
-        // ...
       });
   };
 
@@ -64,7 +82,9 @@ export default class Login extends React.Component {
               </div>
             </section>
             <footer className="modal-card-foot">
-              <button className="button is-info">Log in</button>
+              <button id="button" className="button is-info">
+                Log in
+              </button>
             </footer>
           </form>
         </div>

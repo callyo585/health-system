@@ -1,13 +1,21 @@
 import Link from "next/link";
-import Router from "next/router";
-
-Router.onRouteChangeStart = url => {
-  console.log("url -->", url);
-};
+import Logout from "./logout";
 
 export default class Navbar extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      authUser: null
+    };
+  }
+
   loginHandle = () => {
     document.getElementById("login").classList.add("is-active");
+  };
+
+  logout = () => {
+    this.setState({ authUser: null });
   };
 
   signupHandle = () => {
@@ -19,7 +27,49 @@ export default class Navbar extends React.Component {
     getPath(path);
   };
 
+  componentDidMount() {
+    const { firebase } = this.props;
+
+    firebase.auth().onAuthStateChanged(authUser => {
+      if (authUser) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(authUser.email)
+          .get()
+          .then(user => {
+            this.setState({ authUser: user.data() });
+          });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    const { firebase } = this.props;
+
+    firebase.auth().onAuthStateChanged(authUser => {
+      if (authUser) {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(authUser.email)
+          .get()
+          .then(user => {
+            this.setState({ authUser: user.data() });
+          });
+      }
+    });
+  }
+
+  buttonState = () => {
+    document.getElementById("signupButton").classList.remove("is-loading");
+    document.getElementById("loginButton").classList.remove("is-loading");
+  };
+
   render() {
+    const { authUser } = this.state;
+    const { firebase } = this.props;
+
     return (
       <nav className="navbar is-info" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
@@ -57,39 +107,33 @@ export default class Navbar extends React.Component {
               </a>
             </Link>
 
-            <Link href="/dotprobe">
-              <a
-                className="navbar-item"
-                onClick={() => {
-                  this.handleGetPath("Dotprobe");
-                }}>
-                Dot Probe Task
-              </a>
-            </Link>
-
-            {/* <div className="navbar-item has-dropdown is-hoverable">
-              <a className="navbar-link">More</a>
-
-              <div className="navbar-dropdown">
-                <a className="navbar-item">About</a>
-                <a className="navbar-item">Jobs</a>
-                <a className="navbar-item">Contact</a>
-                <hr className="navbar-divider"></hr>
-                <a className="navbar-item">Report an issue</a>
-              </div>
-            </div> */}
+            {authUser ? (
+              <Link href="/dotprobe">
+                <a
+                  className="navbar-item"
+                  onClick={() => {
+                    this.handleGetPath("Dotprobe");
+                  }}>
+                  Game
+                </a>
+              </Link>
+            ) : null}
           </div>
 
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
-                <a className="button is-primary" onClick={this.signupHandle}>
+                <a id="signupButton" className="button is-primary" onClick={this.signupHandle}>
                   <strong>Sign up</strong>
                 </a>
 
-                <a className="button is-light" onClick={this.loginHandle}>
-                  Log in
-                </a>
+                {authUser ? (
+                  <Logout firebase={firebase} logout={this.logout} />
+                ) : (
+                  <a id="loginButton" className="button is-light" onClick={this.loginHandle}>
+                    <strong>Log in</strong>
+                  </a>
+                )}
               </div>
             </div>
           </div>
