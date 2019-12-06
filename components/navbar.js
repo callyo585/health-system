@@ -27,19 +27,37 @@ export default class Navbar extends React.Component {
     getPath(path);
   };
 
+  inSession = () => {
+    return (
+      <React.Fragment>
+        <Link href="/profile">
+          <a
+            className="navbar-item"
+            onClick={() => {
+              this.handleGetPath("Profile");
+            }}>
+            Profile
+          </a>
+        </Link>
+        <Link href="/dotprobe">
+          <a
+            className="navbar-item"
+            onClick={() => {
+              this.handleGetPath("Dotprobe");
+            }}>
+            Game
+          </a>
+        </Link>
+      </React.Fragment>
+    );
+  };
+
   componentDidMount() {
     const { firebase } = this.props;
 
     firebase.auth().onAuthStateChanged(authUser => {
       if (authUser) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(authUser.email)
-          .get()
-          .then(user => {
-            this.setState({ authUser: user.data() });
-          });
+        this.setState({ authUser });
       }
     });
   }
@@ -49,22 +67,10 @@ export default class Navbar extends React.Component {
 
     firebase.auth().onAuthStateChanged(authUser => {
       if (authUser) {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(authUser.email)
-          .get()
-          .then(user => {
-            this.setState({ authUser: user.data() });
-          });
+        this.setState({ authUser });
       }
     });
   }
-
-  buttonState = () => {
-    document.getElementById("signupButton").classList.remove("is-loading");
-    document.getElementById("loginButton").classList.remove("is-loading");
-  };
 
   render() {
     const { authUser } = this.state;
@@ -107,17 +113,7 @@ export default class Navbar extends React.Component {
               </a>
             </Link>
 
-            {authUser ? (
-              <Link href="/dotprobe">
-                <a
-                  className="navbar-item"
-                  onClick={() => {
-                    this.handleGetPath("Dotprobe");
-                  }}>
-                  Game
-                </a>
-              </Link>
-            ) : null}
+            {authUser ? this.inSession() : null}
           </div>
 
           <div className="navbar-end">

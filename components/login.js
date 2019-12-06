@@ -21,7 +21,6 @@ export default class Login extends React.Component {
     };
 
     document.getElementById("button").classList.add("is-loading");
-    document.getElementById("loginButton").classList.add("is-loading");
 
     firebase
       .auth()
@@ -39,7 +38,7 @@ export default class Login extends React.Component {
             console.log("user has logged in successfully");
             document.getElementById("login").classList.remove("is-active");
             document.getElementById("button").classList.remove("is-loading");
-            Router.push("/dotprobe");
+            Router.push("/profile");
           });
         return response;
       })
@@ -48,6 +47,7 @@ export default class Login extends React.Component {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.error("Status ", errorCode, " : ", errorMessage);
+        document.getElementById("button").classList.remove("is-loading");
       });
   };
 
