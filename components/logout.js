@@ -16,13 +16,12 @@ export default class Logout extends React.Component {
   };
 
   render() {
-    const { firebase, logout } = this.props;
+    const { firebase } = this.props;
 
     return (
       <a
         className="button is-light"
         onClick={() => {
-          logout();
           this.handleLogout(firebase);
         }}>
         <strong>Logout</strong>

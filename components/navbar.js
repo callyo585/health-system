@@ -2,20 +2,8 @@ import Link from "next/link";
 import Logout from "./logout";
 
 export default class Navbar extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      authUser: null
-    };
-  }
-
   loginHandle = () => {
     document.getElementById("login").classList.add("is-active");
-  };
-
-  logout = () => {
-    this.setState({ authUser: null });
   };
 
   signupHandle = () => {
@@ -52,29 +40,8 @@ export default class Navbar extends React.Component {
     );
   };
 
-  componentDidMount() {
-    const { firebase } = this.props;
-
-    firebase.auth().onAuthStateChanged(authUser => {
-      if (authUser) {
-        this.setState({ authUser });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    const { firebase } = this.props;
-
-    firebase.auth().onAuthStateChanged(authUser => {
-      if (authUser) {
-        this.setState({ authUser });
-      }
-    });
-  }
-
   render() {
-    const { authUser } = this.state;
-    const { firebase } = this.props;
+    const { firebase, authUser } = this.props;
 
     return (
       <nav className="navbar is-info" role="navigation" aria-label="main navigation">
@@ -119,9 +86,11 @@ export default class Navbar extends React.Component {
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
-                <a id="signupButton" className="button is-primary" onClick={this.signupHandle}>
-                  <strong>Sign up</strong>
-                </a>
+                {authUser ? null : (
+                  <a id="signupButton" className="button is-primary" onClick={this.signupHandle}>
+                    <strong>Sign up</strong>
+                  </a>
+                )}
 
                 {authUser ? (
                   <Logout firebase={firebase} logout={this.logout} />

@@ -1,7 +1,14 @@
-import DotProbe from "../screens/dotprobe";
-
 export default class Index extends React.Component {
   render() {
-    return <DotProbe />;
+    return (
+      <section className="hero">
+        <div className="hero-body">
+          <div className="container">
+            <h1 className="title">Game</h1>
+            <h2 className="subtitle"></h2>
+          </div>
+        </div>
+      </section>
+    );
   }
 }

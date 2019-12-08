@@ -1,11 +1,11 @@
-export const renderDropdown = (category, data, data2) => {
+export const renderDropdown = (category, data) => {
   let select = [];
 
   switch (category) {
     case "age":
       for (let i = 1; i <= 80; i++) {
         select.push(
-          <option value={i} key={i} selected={data && data.age == i ? true : false}>
+          <option value={i} key={i}>
             {i}
           </option>
         );
@@ -15,7 +15,7 @@ export const renderDropdown = (category, data, data2) => {
       if (data) {
         for (let i = 0; i < data.length; i++) {
           select.push(
-            <option value={data[i].alpha3Code} key={data[i].alpha3Code} selected={data2 && data2.country == data[i].alpha3Code ? true : false}>
+            <option value={data[i].alpha3Code} key={data[i].alpha3Code}>
               {data[i].name}
             </option>
           );
@@ -24,12 +24,9 @@ export const renderDropdown = (category, data, data2) => {
       break;
     case "race":
       const races = ["Chinese", "Malay", "Indian", "Others"];
-      if (data) {
-        console.log(data);
-      }
       races.map(race => {
         select.push(
-          <option value={race} key={race} selected={data && data.race == race ? true : null}>
+          <option value={race} key={race}>
             {race}
           </option>
         );

@@ -2,8 +2,10 @@ import Router from "next/router";
 
 export default class Login extends React.Component {
   state = {
+    incorrect: false,
     email: "",
-    password: ""
+    password: "",
+    error: null
   };
 
   closeLogin = () => {
@@ -13,7 +15,7 @@ export default class Login extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { firebase } = this.props;
+    const { firebase, setAuthUser } = this.props;
     const userData = this.state;
     const login = {
       email: userData.email,
@@ -38,16 +40,43 @@ export default class Login extends React.Component {
             console.log("user has logged in successfully");
             document.getElementById("login").classList.remove("is-active");
             document.getElementById("button").classList.remove("is-loading");
+            this.setState({ email: "", password: "" });
+            firebase.auth().onAuthStateChanged(authUser => {
+              if (authUser) {
+                firebase
+                  .firestore()
+                  .collection("users")
+                  .doc(authUser.email)
+                  .get()
+                  .then(authUser => {
+                    setAuthUser(authUser);
+                  });
+              }
+            });
             Router.push("/profile");
           });
         return response;
       })
       .catch(error => {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.error("Status ", errorCode, " : ", errorMessage);
+        let errorMessage = null;
+        if (error.code.includes("email")) {
+          errorMessage = "Incorrect email!";
+        }
+
+        if (error.code.includes("password")) {
+          errorMessage = "Incorrect password!";
+        }
+
+        if (error.code.includes("user-not-found")) {
+          errorMessage = "Email is not registered in our system!";
+        }
+
+        const originalError = error.code + " : " + error.message;
+        console.log(originalError);
+
         document.getElementById("button").classList.remove("is-loading");
+        this.setState({ incorrect: true, error: errorMessage });
       });
   };
 
@@ -58,6 +87,7 @@ export default class Login extends React.Component {
   };
 
   render() {
+    const { incorrect, error, email, password } = this.state;
     return (
       <div className="modal" id="login">
         <div className="modal-background" onClick={this.closeLogin}></div>
@@ -71,13 +101,13 @@ export default class Login extends React.Component {
               <div className="columns is-mobile">
                 <div className="column is-one-fifth">User Email: </div>
                 <div className="column">
-                  <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={this.handleChange}></input>
+                  <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={this.handleChange} value={email} onFocus></input>
                 </div>
               </div>
               <div className="columns is-mobile">
                 <div className="column is-one-fifth">Password: </div>
                 <div className="column">
-                  <input className="input is-info" type="password" placeholder="password" name="password" onChange={this.handleChange}></input>
+                  <input className="input is-info" type="password" placeholder="password" name="password" onChange={this.handleChange} value={password}></input>
                 </div>
               </div>
             </section>
@@ -85,6 +115,7 @@ export default class Login extends React.Component {
               <button id="button" className="button is-info">
                 Log in
               </button>
+              {incorrect ? <div className="column has-text-danger incorrect"> {error} </div> : null}
             </footer>
           </form>
         </div>

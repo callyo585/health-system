@@ -6,6 +6,7 @@ import firebase from "../lib/initialize";
 
 export default class MyApp extends App {
   state = {
+    authUser: null,
     path: null
   };
 
@@ -13,16 +14,22 @@ export default class MyApp extends App {
     this.setState({ path });
   };
 
+  setAuthUser = authUser => {
+    this.setState({ authUser });
+  };
+
   render() {
     const { Component, pageProps } = this.props;
-    const { path } = this.state;
+    const { path, authUser } = this.state;
+
+    console.log("check", authUser);
 
     return (
       <React.Fragment>
         <Head>
           <title>{path ? "HappyFaces - " + path : "HappyFaces - Home"}</title>
         </Head>
-        <Layout getPath={this.getPath} firebase={firebase}>
+        <Layout getPath={this.getPath} firebase={firebase} authUser={authUser} setAuthUser={this.setAuthUser}>
           <Component {...pageProps} firebase={firebase} />
         </Layout>
       </React.Fragment>
