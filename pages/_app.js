@@ -22,8 +22,6 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
     const { path, authUser } = this.state;
 
-    console.log("check", authUser);
-
     return (
       <React.Fragment>
         <Head>

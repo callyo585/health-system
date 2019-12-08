@@ -41,7 +41,7 @@ export default class Navbar extends React.Component {
   };
 
   render() {
-    const { firebase, authUser } = this.props;
+    const { firebase, authUser, setAuthUser } = this.props;
 
     return (
       <nav className="navbar is-info" role="navigation" aria-label="main navigation">
@@ -93,7 +93,7 @@ export default class Navbar extends React.Component {
                 )}
 
                 {authUser ? (
-                  <Logout firebase={firebase} logout={this.logout} />
+                  <Logout firebase={firebase} logout={this.logout} setAuthUser={setAuthUser} />
                 ) : (
                   <a id="loginButton" className="button is-light" onClick={this.loginHandle}>
                     <strong>Log in</strong>

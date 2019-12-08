@@ -101,7 +101,7 @@ export default class Login extends React.Component {
               <div className="columns is-mobile">
                 <div className="column is-one-fifth">User Email: </div>
                 <div className="column">
-                  <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={this.handleChange} value={email} onFocus></input>
+                  <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={this.handleChange} value={email}></input>
                 </div>
               </div>
               <div className="columns is-mobile">
