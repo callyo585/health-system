@@ -1,7 +1,9 @@
 import Form from "../components/form";
+import Router from "next/router";
 
 export default class Profile extends React.Component {
   state = {
+    authUser: null,
     countries: [],
     statusCountries: null,
     gender: "",
@@ -31,7 +33,7 @@ export default class Profile extends React.Component {
 
     firebase.auth().onAuthStateChanged(authUser => {
       if (authUser) {
-        this.setState({ loading: true });
+        this.setState({ loading: true, authUser: authUser });
         firebase
           .firestore()
           .collection("users")
@@ -53,6 +55,8 @@ export default class Profile extends React.Component {
               loading: false
             });
           });
+      } else {
+        Router.push("/");
       }
     });
   }
@@ -103,8 +107,7 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading } = this.state;
-    const { authUser } = this.props;
+    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, authUser } = this.state;
 
     const profileData = {
       gender,

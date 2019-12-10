@@ -1,15 +1,15 @@
 import Navbar from "./navbar";
-import LoginForm from "./login";
+import SigninForm from "./signin";
 import SignupForm from "./signup";
 
-export default ({ children, getPath, firebase, authUser, setAuthUser }) => (
+export default ({ children, getPath, firebase }) => (
   <div>
     <header>
-      <Navbar getPath={getPath} firebase={firebase} authUser={authUser} setAuthUser={setAuthUser} />
+      <Navbar getPath={getPath} firebase={firebase} />
     </header>
 
-    <SignupForm firebase={firebase} authUser={authUser} setAuthUser={setAuthUser} />
-    <LoginForm firebase={firebase} authUser={authUser} setAuthUser={setAuthUser} />
+    <SignupForm firebase={firebase} />
+    <SigninForm firebase={firebase} />
     {children}
     <footer></footer>
   </div>

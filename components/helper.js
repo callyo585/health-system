@@ -39,3 +39,20 @@ export const renderDropdown = (category, data) => {
 
   return options;
 };
+
+export const toggleDropdown = () => {
+  document.getElementById("burger").classList.toggle("is-active");
+  document.getElementById("navbarBasicExample").classList.toggle("is-active");
+};
+
+export const toggleSignin = () => {
+  document.getElementById("signin").classList.toggle("is-active");
+};
+
+export const toggleSignup = () => {
+  document.getElementById("signup").classList.toggle("is-active");
+};
+
+export const toggleButton = () => {
+  document.getElementById("button").classList.toggle("is-loading");
+};

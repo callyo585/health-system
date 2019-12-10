@@ -2,9 +2,9 @@ import { renderDropdown } from "./helper";
 
 export default class Form extends React.Component {
   render() {
-    const { handleChange, handleSubmit, countries, error, profile, signup, signupDetails, profileData, loading, authUser } = this.props;
+    const { handleChange, handleSubmit, countries, error, profile, signup, signupDetails, profileData, loading } = this.props;
 
-    if (loading && !authUser) {
+    if (loading) {
       return (
         <section className="modal-card-body">
           <div> Loading Profile... </div>
@@ -104,7 +104,7 @@ export default class Form extends React.Component {
               Weight<span className="has-text-danger">*</span> :
             </div>
             <div className="column is-one-fourth">
-              <input className="input is-info" type="number" placeholder="in kg(e.g. 80.6)" name="weight" onChange={handleChange} value={signup && signupDetails ? signupDetails.height : profileData.height} />
+              <input className="input is-info" type="number" placeholder="in kg(e.g. 80.6)" name="weight" onChange={handleChange} value={signup && signupDetails ? signupDetails.weight : profileData.weight} />
             </div>
           </div>
           <div className="columns is-mobile">

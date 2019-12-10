@@ -2,8 +2,9 @@ import Error from "../pages/_error";
 import fetch from "isomorphic-unfetch";
 import Form from "./form";
 import Router from "next/router";
+import { toggleSignup, toggleButton } from "./helper";
 
-export default class Login extends React.Component {
+export default class Signup extends React.Component {
   constructor(props) {
     super(props);
 
@@ -50,10 +51,6 @@ export default class Login extends React.Component {
     });
   }
 
-  closeSignup = () => {
-    document.getElementById("signup").classList.remove("is-active");
-  };
-
   // validateSignup = signUp => {
   //   const usernameRegex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
   //   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -65,7 +62,7 @@ export default class Login extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
 
-    const { firebase, setAuthUser } = this.props;
+    const { firebase } = this.props;
     const userData = this.state;
     const signUp = {
       username: userData.username,
@@ -80,6 +77,8 @@ export default class Login extends React.Component {
       password: userData.password,
       confirmPass: userData.confirmPass
     };
+
+    toggleButton();
 
     firebase
       .auth()
@@ -104,10 +103,10 @@ export default class Login extends React.Component {
           password: "",
           confirmPass: ""
         });
-        document.getElementById("signup").classList.remove("is-active");
+
         firebase
           .auth()
-          .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+          .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
           .then(async () => {
             // Existing and future Auth states are now persisted in the current
             // session only. Closing the window would clear any existing state even
@@ -119,22 +118,11 @@ export default class Login extends React.Component {
               .signInWithEmailAndPassword(signUp.email, signUp.password)
               .then(response => {
                 console.log("user has logged in successfully");
-
-                firebase.auth().onAuthStateChanged(authUser => {
-                  if (authUser) {
-                    firebase
-                      .firestore()
-                      .collection("users")
-                      .doc(authUser.email)
-                      .get()
-                      .then(authUser => {
-                        setAuthUser(authUser.data());
-                      });
-                  }
-                });
               });
             return response;
           });
+
+        toggleSignup();
         Router.push("/profile");
       })
       .catch(error => {
@@ -172,11 +160,11 @@ export default class Login extends React.Component {
 
     return (
       <div className="modal" id="signup">
-        <div className="modal-background" onClick={this.closeSignup}></div>
+        <div className="modal-background" onClick={toggleSignup}></div>
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">Signup</p>
-            <button className="delete" aria-label="close" onClick={this.closeSignup}></button>
+            <button className="delete" aria-label="close" onClick={toggleSignup}></button>
           </header>
           <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} error={error} profile={profile} signup={signup} signupDetails={signupDetails} />
         </div>

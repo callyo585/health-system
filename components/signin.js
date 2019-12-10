@@ -1,6 +1,7 @@
 import Router from "next/router";
+import { toggleSignin, toggleButton } from "./helper";
 
-export default class Login extends React.Component {
+export default class Signin extends React.Component {
   state = {
     incorrect: false,
     email: "",
@@ -8,25 +9,21 @@ export default class Login extends React.Component {
     error: null
   };
 
-  closeLogin = () => {
-    document.getElementById("login").classList.remove("is-active");
-  };
-
   handleSubmit = event => {
     event.preventDefault();
 
-    const { firebase, setAuthUser } = this.props;
+    const { firebase } = this.props;
     const userData = this.state;
-    const login = {
+    const signin = {
       email: userData.email,
       password: userData.password
     };
 
-    document.getElementById("button").classList.add("is-loading");
+    toggleButton();
 
     firebase
       .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(async () => {
         // Existing and future Auth states are now persisted in the current
         // session only. Closing the window would clear any existing state even
@@ -35,24 +32,12 @@ export default class Login extends React.Component {
         // New sign-in will be persisted with session persistence.
         const response = await firebase
           .auth()
-          .signInWithEmailAndPassword(login.email, login.password)
+          .signInWithEmailAndPassword(signin.email, signin.password)
           .then(response => {
             console.log("user has logged in successfully");
-            document.getElementById("login").classList.remove("is-active");
-            document.getElementById("button").classList.remove("is-loading");
+            toggleSignin();
+            toggleButton();
             this.setState({ email: "", password: "" });
-            firebase.auth().onAuthStateChanged(authUser => {
-              if (authUser) {
-                firebase
-                  .firestore()
-                  .collection("users")
-                  .doc(authUser.email)
-                  .get()
-                  .then(authUser => {
-                    setAuthUser(authUser);
-                  });
-              }
-            });
             Router.push("/profile");
           });
         return response;
@@ -75,7 +60,7 @@ export default class Login extends React.Component {
         const originalError = error.code + " : " + error.message;
         console.log(originalError);
 
-        document.getElementById("button").classList.remove("is-loading");
+        toggleButton();
         this.setState({ incorrect: true, error: errorMessage });
       });
   };
@@ -89,12 +74,12 @@ export default class Login extends React.Component {
   render() {
     const { incorrect, error, email, password } = this.state;
     return (
-      <div className="modal" id="login">
-        <div className="modal-background" onClick={this.closeLogin}></div>
+      <div className="modal" id="signin">
+        <div className="modal-background" onClick={toggleSignin}></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Login</p>
-            <button className="delete" aria-label="close" onClick={this.closeLogin}></button>
+            <p className="modal-card-title">Sign in</p>
+            <button className="delete" aria-label="close" onClick={toggleSignin}></button>
           </header>
           <form onSubmit={this.handleSubmit}>
             <section className="modal-card-body">

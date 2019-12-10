@@ -8,7 +8,7 @@ export default class Logout extends React.Component {
       .then(response => {
         // Sign-out successful.
         console.log("user has logged out successfully");
-        Router.push("/");
+        Router.push("/logout");
       })
       .catch(error => {
         // An error happened.
@@ -16,13 +16,12 @@ export default class Logout extends React.Component {
   };
 
   render() {
-    const { firebase, setAuthUser } = this.props;
+    const { firebase } = this.props;
 
     return (
       <a
         className="button is-light"
         onClick={() => {
-          setAuthUser(null);
           this.handleLogout(firebase);
         }}>
         <strong>Logout</strong>

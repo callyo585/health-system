@@ -1,14 +1,18 @@
 import Link from "next/link";
 import Logout from "./logout";
+import { toggleDropdown, toggleSignin, toggleSignup } from "./helper";
 
 export default class Navbar extends React.Component {
-  loginHandle = () => {
-    document.getElementById("login").classList.add("is-active");
+  state = {
+    authUser: null
   };
 
-  signupHandle = () => {
-    document.getElementById("signup").classList.add("is-active");
-  };
+  componentDidMount() {
+    const { firebase } = this.props;
+    firebase.auth().onAuthStateChanged(authUser => {
+      this.setState({ authUser });
+    });
+  }
 
   handleGetPath = path => {
     const { getPath } = this.props;
@@ -41,7 +45,8 @@ export default class Navbar extends React.Component {
   };
 
   render() {
-    const { firebase, authUser, setAuthUser } = this.props;
+    const { firebase } = this.props;
+    const { authUser } = this.state;
 
     return (
       <nav className="navbar is-info" role="navigation" aria-label="main navigation">
@@ -51,7 +56,16 @@ export default class Navbar extends React.Component {
             <h1 className="title has-text-white">HappyFaces</h1>
           </div>
 
-          <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+          <a
+            role="button"
+            id="burger"
+            className="navbar-burger burger "
+            aria-label="menu"
+            aria-expanded="false"
+            data-target="navbarBasicExample"
+            onClick={() => {
+              toggleDropdown();
+            }}>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -87,16 +101,16 @@ export default class Navbar extends React.Component {
             <div className="navbar-item">
               <div className="buttons">
                 {authUser ? null : (
-                  <a id="signupButton" className="button is-primary" onClick={this.signupHandle}>
+                  <a id="signupButton" className="button is-primary" onClick={toggleSignup}>
                     <strong>Sign up</strong>
                   </a>
                 )}
 
                 {authUser ? (
-                  <Logout firebase={firebase} logout={this.logout} setAuthUser={setAuthUser} />
+                  <Logout firebase={firebase} />
                 ) : (
-                  <a id="loginButton" className="button is-light" onClick={this.loginHandle}>
-                    <strong>Log in</strong>
+                  <a id="signinButton" className="button is-light" onClick={toggleSignin}>
+                    <strong>Sign in</strong>
                   </a>
                 )}
               </div>
