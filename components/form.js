@@ -38,7 +38,7 @@ export default class Form extends React.Component {
             <div className="column">
               <div className="control">
                 <div className="select is-info">
-                  <select name="age" onChange={handleChange} value={signup && signupDetails ? signupDetails.username : profileData.username}>
+                  <select name="age" onChange={handleChange} value={signup && signupDetails ? signupDetails.age : profileData.age}>
                     <option value={0}>Select Age</option>
                     {renderDropdown("age")}
                   </select>
