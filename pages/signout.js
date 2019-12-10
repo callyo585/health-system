@@ -1,32 +1,8 @@
 import Link from "next/link";
+import { ButtonSection } from "../components/section";
 
-export default class Index extends React.Component {
+export default class Signout extends React.Component {
   render() {
-    return (
-      <section className="hero">
-        <div className="hero-body">
-          <div className="container">
-            <h1 className="title">You have signed out successfully</h1>
-            <Link href="/">
-              <div className="button is-primary">
-                <a className="signout">
-                  <strong>Return to Home</strong>
-                </a>
-              </div>
-            </Link>
-          </div>
-        </div>
-        <style jsx>
-          {`
-            .container {
-              text-align: center;
-            }
-            .signout {
-              color: white;
-            }
-          `}
-        </style>
-      </section>
-    );
+    return <ButtonSection title="You have signed out successfully" button="Return to Home" href={{ href: "/" }} />;
   }
 }

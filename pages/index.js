@@ -1,15 +1,10 @@
+import { Section, ButtonSection } from "../components/section";
+
 export default class Index extends React.Component {
   render() {
     return (
       <div>
-        <section className="hero">
-          <div className="hero-body">
-            <div className="container">
-              <h1 className="title">Welcome to HappyFaces</h1>
-              <h2 className="subtitle">Achieving a Happy Face!</h2>
-            </div>
-          </div>
-        </section>
+        <Section title="Welcome to HappyFaces" subtitle="Achieving a Happy Face!" />
         <section className="hero">
           <div className="hero-body">
             <div className="container">

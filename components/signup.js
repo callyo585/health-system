@@ -121,7 +121,7 @@ export default class Signup extends React.Component {
           });
 
         toggleSignup();
-        Router.push("/profile");
+        Router.push("/verification");
       })
       .catch(error => {
         // Handle Errors here.

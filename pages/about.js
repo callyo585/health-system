@@ -1,4 +1,4 @@
-export default class Index extends React.Component {
+export default class About extends React.Component {
   render() {
     return (
       <section className="hero">

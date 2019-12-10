@@ -61,6 +61,10 @@ export const toggleButton = button => {
   if (button == "signup" || button == "update") {
     document.getElementById("button").classList.toggle("is-loading");
   }
+
+  if (button == "verification") {
+    document.getElementById("verification").classList.toggle("is-loading");
+  }
 };
 
 export const validateInput = input => {
