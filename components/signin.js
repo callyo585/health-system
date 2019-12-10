@@ -19,7 +19,7 @@ export default class Signin extends React.Component {
       password: userData.password
     };
 
-    toggleButton();
+    toggleButton("signin");
 
     firebase
       .auth()
@@ -30,17 +30,16 @@ export default class Signin extends React.Component {
         // if a user forgets to sign out.
         // ...
         // New sign-in will be persisted with session persistence.
-        const response = await firebase
+        await firebase
           .auth()
           .signInWithEmailAndPassword(signin.email, signin.password)
           .then(response => {
             console.log("user has logged in successfully");
             toggleSignin();
-            toggleButton();
+            toggleButton("signin");
             this.setState({ email: "", password: "" });
             Router.push("/profile");
           });
-        return response;
       })
       .catch(error => {
         // Handle Errors here.
@@ -60,7 +59,7 @@ export default class Signin extends React.Component {
         const originalError = error.code + " : " + error.message;
         console.log(originalError);
 
-        toggleButton();
+        toggleButton("signin");
         this.setState({ incorrect: true, error: errorMessage });
       });
   };
@@ -97,7 +96,7 @@ export default class Signin extends React.Component {
               </div>
             </section>
             <footer className="modal-card-foot">
-              <button id="button" className="button is-info">
+              <button id="signinButton" className="button is-info">
                 Log in
               </button>
               {incorrect ? <div className="column has-text-danger incorrect"> {error} </div> : null}

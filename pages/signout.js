@@ -9,7 +9,7 @@ export default class Index extends React.Component {
             <h1 className="title">You have signed out successfully</h1>
             <Link href="/">
               <div className="button is-primary">
-                <a className="logout">
+                <a className="signout">
                   <strong>Return to Home</strong>
                 </a>
               </div>
@@ -21,7 +21,7 @@ export default class Index extends React.Component {
             .container {
               text-align: center;
             }
-            .logout {
+            .signout {
               color: white;
             }
           `}

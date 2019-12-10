@@ -53,6 +53,73 @@ export const toggleSignup = () => {
   document.getElementById("signup").classList.toggle("is-active");
 };
 
-export const toggleButton = () => {
-  document.getElementById("button").classList.toggle("is-loading");
+export const toggleButton = button => {
+  if (button == "signin") {
+    document.getElementById("signinButton").classList.toggle("is-loading");
+  }
+
+  if (button == "signup" || button == "update") {
+    document.getElementById("button").classList.toggle("is-loading");
+  }
+};
+
+export const validateInput = input => {
+  const usernameRegex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
+  const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  if (input.username == "") {
+    return "Username cannot be empty!";
+  } else if (input.username.search(usernameRegex)) {
+    return "Username is invalid!";
+  }
+
+  if (input.email == "") {
+    return "Email cannot be empty!";
+  } else if (input.email.search(emailRegex)) {
+    return "Email is invalid!";
+  }
+
+  if (input.age == 0) {
+    return "Age must be selected!";
+  }
+
+  if (input.gender == "") {
+    return "Gender must be selected!";
+  }
+
+  if (input.country == "") {
+    return "Country must be selected!";
+  }
+
+  if (input.race == "") {
+    return "Race must be selected!";
+  }
+
+  if (input.height == "") {
+    return "Height cannot be empty!";
+  } else if (parseFloat(input.height) <= 0) {
+    return "Height cannot be zero or negative!";
+  } else if (input.height.includes("e")) {
+    return "Height can only be a number!";
+  }
+
+  if (input.weight == "") {
+    return "Weight cannot be empty!";
+  } else if (parseFloat(input.weight) <= 0) {
+    return "Weight cannot be zero or negative!";
+  } else if (input.weight.includes("e")) {
+    return "Weight can only be a number!";
+  }
+
+  if (input.password == "") {
+    return "Password cannot be empty!";
+  } else if (input.password.length < 6) {
+    return "Password length must be at least 6 characters!";
+  }
+
+  if (input.confirmPass == "") {
+    return "Confirm Password cannot be empty!";
+  } else if (input.confirmPass != input.password) {
+    return "Password and Confirm Password do not match!";
+  }
 };

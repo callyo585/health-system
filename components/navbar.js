@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logout from "./logout";
+import Signout from "./signout";
 import { toggleDropdown, toggleSignin, toggleSignup } from "./helper";
 
 export default class Navbar extends React.Component {
@@ -101,15 +101,15 @@ export default class Navbar extends React.Component {
             <div className="navbar-item">
               <div className="buttons">
                 {authUser ? null : (
-                  <a id="signupButton" className="button is-primary" onClick={toggleSignup}>
+                  <a className="button is-primary" onClick={toggleSignup}>
                     <strong>Sign up</strong>
                   </a>
                 )}
 
                 {authUser ? (
-                  <Logout firebase={firebase} />
+                  <Signout firebase={firebase} />
                 ) : (
-                  <a id="signinButton" className="button is-light" onClick={toggleSignin}>
+                  <a className="button is-light" onClick={toggleSignin}>
                     <strong>Sign in</strong>
                   </a>
                 )}

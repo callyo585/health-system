@@ -2,7 +2,7 @@ import Error from "../pages/_error";
 import fetch from "isomorphic-unfetch";
 import Form from "./form";
 import Router from "next/router";
-import { toggleSignup, toggleButton } from "./helper";
+import { toggleSignup, toggleButton, validateInput } from "./helper";
 
 export default class Signup extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class Signup extends React.Component {
       gender: "",
       username: "",
       email: "",
-      age: "",
+      age: 0,
       country: "",
       race: "",
       height: "",
@@ -25,7 +25,7 @@ export default class Signup extends React.Component {
       signup: true,
       profile: false,
       valid: true,
-      error: null
+      error: ""
     };
   }
 
@@ -51,45 +51,43 @@ export default class Signup extends React.Component {
     });
   }
 
-  // validateSignup = signUp => {
-  //   const usernameRegex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
-  //   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  //   if (signUp.username != usernameRegex) {
-  //     this.setState({ valid: false, error: "Username is invalid" });
-  //   }
-  // };
-
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ valid: true, error: "" });
 
     const { firebase } = this.props;
     const userData = this.state;
     const signUp = {
       username: userData.username,
       email: userData.email,
-      age: parseInt(userData.age),
+      age: userData.age,
       gender: userData.gender,
       country: userData.country,
       race: userData.race,
-      height: parseInt(userData.height),
-      weight: parseInt(userData.weight),
+      height: userData.height,
+      weight: userData.weight,
       illness: userData.illness,
       password: userData.password,
       confirmPass: userData.confirmPass
     };
 
-    toggleButton();
+    if (validateInput(signUp)) {
+      this.setState({ valid: false, error: validateInput(signUp) });
+      return false;
+    }
+
+    toggleButton("signup");
 
     firebase
       .auth()
       .createUserWithEmailAndPassword(signUp.email, signUp.password)
       .then(response => {
+        console.log("user created successfully");
         firebase
           .firestore()
           .collection("users")
           .doc(signUp.email)
           .set(signUp);
-        console.log("user created successfully");
         this.setState({
           gender: "",
           username: "",
@@ -141,7 +139,7 @@ export default class Signup extends React.Component {
   };
 
   render() {
-    const { countries, statusCountries, error, profile, signup, gender, username, email, age, country, race, height, weight, illness, password, confirmPass } = this.state;
+    const { countries, statusCountries, error, profile, signup, gender, username, email, age, country, race, height, weight, illness, password, confirmPass, valid } = this.state;
 
     const signupDetails = {
       gender,
@@ -156,17 +154,16 @@ export default class Signup extends React.Component {
       password,
       confirmPass
     };
-    console.log("check signupDetails", signupDetails);
 
     return (
       <div className="modal" id="signup">
         <div className="modal-background" onClick={toggleSignup}></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Signup</p>
+            <p className="modal-card-title">Sign Up</p>
             <button className="delete" aria-label="close" onClick={toggleSignup}></button>
           </header>
-          <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} error={error} profile={profile} signup={signup} signupDetails={signupDetails} />
+          <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} error={error} profile={profile} signup={signup} signupDetails={signupDetails} error={error} valid={valid} />
         </div>
       </div>
     );

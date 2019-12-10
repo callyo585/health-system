@@ -2,7 +2,7 @@ import { renderDropdown } from "./helper";
 
 export default class Form extends React.Component {
   render() {
-    const { handleChange, handleSubmit, countries, error, profile, signup, signupDetails, profileData, loading } = this.props;
+    const { handleChange, handleSubmit, countries, error, profile, signup, signupDetails, profileData, loading, valid } = this.props;
 
     if (loading) {
       return (
@@ -13,7 +13,7 @@ export default class Form extends React.Component {
     }
 
     return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <section className="modal-card-body">
           <div className="columns is-mobile">
             <div className="column is-one-fifth">
@@ -39,7 +39,7 @@ export default class Form extends React.Component {
               <div className="control">
                 <div className="select is-info">
                   <select name="age" onChange={handleChange} value={signup && signupDetails ? signupDetails.username : profileData.username}>
-                    <option value="">Select Age</option>
+                    <option value={0}>Select Age</option>
                     {renderDropdown("age")}
                   </select>
                 </div>
@@ -132,10 +132,10 @@ export default class Form extends React.Component {
           ) : null}
         </section>
         <footer className="modal-card-foot">
-          <button type="submit" className="button is-info">
+          <button id="button" type="submit" className="button is-info">
             {signup && !profile ? "Sign Up" : "Update"}
           </button>
-          {error}
+          {valid ? null : <div className="column has-text-danger">{error}</div>}
         </footer>
       </form>
     );

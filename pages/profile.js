@@ -9,7 +9,7 @@ export default class Profile extends React.Component {
     gender: "",
     username: "",
     email: "",
-    age: "",
+    age: 0,
     country: "",
     race: "",
     height: "",
@@ -120,7 +120,6 @@ export default class Profile extends React.Component {
       weight,
       illness
     };
-    console.log("check profileData", profileData);
 
     return (
       <React.Fragment>
