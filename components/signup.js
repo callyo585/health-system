@@ -1,6 +1,6 @@
 import Error from "../pages/_error";
 import fetch from "isomorphic-unfetch";
-import Form from "./form";
+import Form from "./userform";
 import Router from "next/router";
 import { toggleSignup, toggleButton, validateInput } from "./helper";
 

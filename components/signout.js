@@ -1,14 +1,15 @@
 import Router from "next/router";
 
 export default class Signout extends React.Component {
-  handleSignout = firebase => {
+  handleSignout = () => {
+    const { firebase } = this.props;
+
     firebase
       .auth()
       .signOut()
       .then(response => {
         // Sign-out successful.
         console.log("user has logged out successfully");
-        Router.push("/signout");
       })
       .catch(error => {
         // An error happened.
@@ -16,14 +17,8 @@ export default class Signout extends React.Component {
   };
 
   render() {
-    const { firebase } = this.props;
-
     return (
-      <a
-        className="button is-light"
-        onClick={() => {
-          this.handleSignout(firebase);
-        }}>
+      <a className="button is-light" onClick={this.handleSignout}>
         <strong>Sign out</strong>
       </a>
     );

@@ -46,7 +46,7 @@ export const toggleDropdown = () => {
 };
 
 export const toggleSignin = () => {
-  document.getElementById("signin").classList.toggle("is-active");
+  document.getElementById("basicForm").classList.toggle("is-active");
 };
 
 export const toggleSignup = () => {
@@ -64,6 +64,10 @@ export const toggleButton = button => {
 
   if (button == "verification") {
     document.getElementById("verification").classList.toggle("is-loading");
+  }
+
+  if (button == "reset") {
+    document.getElementById("resetButton").classList.toggle("is-loading");
   }
 };
 

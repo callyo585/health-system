@@ -16,7 +16,7 @@ export const ButtonSection = props => (
     <div className="hero-body">
       <div className="container">
         <h1 className="title">{props.title}</h1>
-        <Link {...props.href}>
+        <Link href={props.href}>
           <button id="verification" className="button is-primary signout" onClick={props.onClick}>
             <strong>{props.button}</strong>
           </button>

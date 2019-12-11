@@ -1,4 +1,4 @@
-import Form from "../components/form";
+import Form from "../components/userform";
 import Router from "next/router";
 
 export default class Profile extends React.Component {
@@ -32,7 +32,11 @@ export default class Profile extends React.Component {
     const { getCountries, getCountriesStatus, firebase } = this.props;
 
     firebase.auth().onAuthStateChanged(authUser => {
-      if (authUser) {
+      if (!authUser) {
+        Router.push("/");
+      } else if (!authUser.emailVerified) {
+        Router.push("/verification");
+      } else {
         this.setState({ loading: true, authUser: authUser });
         firebase
           .firestore()
@@ -43,20 +47,18 @@ export default class Profile extends React.Component {
             this.setState({
               countries: getCountries,
               statusCountries: getCountriesStatus,
-              gender: authUser.data().gender,
-              username: authUser.data().username,
-              email: authUser.data().email,
-              age: authUser.data().age,
-              country: authUser.data().country,
-              race: authUser.data().race,
-              height: authUser.data().height,
-              weight: authUser.data().weight,
-              illness: authUser.data().illness,
+              gender: !!authUser.data().gender ? authUser.data().gender : "",
+              username: !!authUser.data().username ? authUser.data().username : "",
+              email: !!authUser.data().email ? authUser.data().email : "",
+              age: !!authUser.data().age ? authUser.data().age : 0,
+              country: !!authUser.data().country ? authUser.data().country : "",
+              race: !!authUser.data().race ? authUser.data().race : "",
+              height: !!authUser.data().height ? authUser.data().height : "",
+              weight: !!authUser.data().weight ? authUser.data().weight : "",
+              illness: !!authUser.data().illness ? authUser.data().illness : "",
               loading: false
             });
           });
-      } else {
-        Router.push("/");
       }
     });
   }

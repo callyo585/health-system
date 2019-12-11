@@ -1,8 +1,9 @@
 import App from "next/app";
 import Head from "next/head";
 import Layout from "../components/layout";
-import "../styles/styles.scss";
 import firebase from "../lib/initialize";
+
+import "../styles/styles.scss";
 
 export default class MyApp extends App {
   state = {

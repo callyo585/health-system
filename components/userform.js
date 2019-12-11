@@ -1,6 +1,6 @@
 import { renderDropdown } from "./helper";
 
-export default class Form extends React.Component {
+export default class UserForm extends React.Component {
   render() {
     const { handleChange, handleSubmit, countries, error, profile, signup, signupDetails, profileData, loading, valid } = this.props;
 
