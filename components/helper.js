@@ -31,6 +31,18 @@ export const renderDropdown = (category, data) => {
           </option>
         );
       });
+    case "gender":
+      const genders = [
+        { name: "Male", code: "M" },
+        { name: "Female", code: "F" }
+      ];
+      genders.map(gender => {
+        select.push(
+          <option value={gender.code} key={gender.code}>
+            {gender.name}
+          </option>
+        );
+      });
   }
 
   const options = select.map(option => {

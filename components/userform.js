@@ -2,7 +2,7 @@ import { renderDropdown } from "./helper";
 
 export default class UserForm extends React.Component {
   render() {
-    const { handleChange, handleSubmit, countries, error, profile, signup, signupDetails, profileData, loading, valid } = this.props;
+    const { handleChange, handleSubmit, countries, message, profile, signup, signupDetails, profileData, loading, valid, msgColor } = this.props;
 
     if (loading) {
       return (
@@ -34,8 +34,8 @@ export default class UserForm extends React.Component {
               Age<span className="has-text-danger">*</span> :
             </div>
             <div className="column">
-              <div className="control">
-                <div className="select is-info">
+              <div className="control is-expanded">
+                <div className="select is-info is-fullwidth">
                   <select name="age" onChange={handleChange} value={signup && signupDetails ? signupDetails.age : profileData.age}>
                     <option value={0}>Select Age</option>
                     {renderDropdown("age")}
@@ -49,15 +49,13 @@ export default class UserForm extends React.Component {
               Gender<span className="has-text-danger">*</span> :
             </div>
             <div className="column">
-              <div className="control">
-                <label className="radio">
-                  <input type="radio" name="gender" value="M" onChange={handleChange} defaultChecked={(signup && !!signupDetails && signupDetails.gender == "M") || (profile && !!profileData && profileData.gender == "M") ? true : false} />
-                  Male
-                </label>
-                <label className="radio">
-                  <input type="radio" name="gender" value="F" onChange={handleChange} defaultChecked={(signup && !!signupDetails && signupDetails.gender == "F") || (profile && !!profileData && profileData.gender == "F") ? true : false} />
-                  Female
-                </label>
+              <div className="control is-expanded">
+                <div className="select is-info is-fullwidth">
+                  <select name="gender" onChange={handleChange} value={signup && signupDetails ? signupDetails.gender : profileData.gender}>
+                    <option value="">Select Gender</option>
+                    {renderDropdown("gender")}
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -66,8 +64,8 @@ export default class UserForm extends React.Component {
               Country<span className="has-text-danger">*</span> :
             </div>
             <div className="column">
-              <div className="control">
-                <div className="select is-info">
+              <div className="control is-expanded">
+                <div className="select is-info is-fullwidth">
                   <select name="country" onChange={handleChange} value={signup && signupDetails ? signupDetails.country : profileData.country}>
                     <option value="">Select Country</option>
                     {renderDropdown("country", countries)}
@@ -81,8 +79,8 @@ export default class UserForm extends React.Component {
               Race<span className="has-text-danger">*</span> :
             </div>
             <div className="column">
-              <div className="control">
-                <div className="select is-info">
+              <div className="control is-expanded">
+                <div className="select is-info is-fullwidth">
                   <select name="race" onChange={handleChange} value={signup && signupDetails ? signupDetails.race : profileData.race}>
                     <option value="">Select Race</option>
                     {renderDropdown("race")}
@@ -96,13 +94,27 @@ export default class UserForm extends React.Component {
               Height<span className="has-text-danger">*</span> :
             </div>
             <div className="column is-one-fourth">
-              <input className="input is-info" type="number" placeholder="in cm(e.g. 160.1)" name="height" onChange={handleChange} value={signup && signupDetails ? signupDetails.height : profileData.height} />
+              <div className="field has-addons">
+                <p className="control">
+                  <input className="input is-info" type="number" placeholder="e.g. 160.1" name="height" onChange={handleChange} value={signup && signupDetails ? signupDetails.height : profileData.height} />
+                </p>
+                <p className="control">
+                  <a className="button is-static">cm</a>
+                </p>
+              </div>
             </div>
             <div className="column is-one-fifth">
               Weight<span className="has-text-danger">*</span> :
             </div>
             <div className="column is-one-fourth">
-              <input className="input is-info" type="number" placeholder="in kg(e.g. 80.6)" name="weight" onChange={handleChange} value={signup && signupDetails ? signupDetails.weight : profileData.weight} />
+              <div className="field has-addons">
+                <p className="control">
+                  <input className="input is-info" type="number" placeholder="e.g. 80.6" name="weight" onChange={handleChange} value={signup && signupDetails ? signupDetails.weight : profileData.weight} />
+                </p>
+                <p className="control">
+                  <a className="button is-static">kg</a>
+                </p>
+              </div>
             </div>
           </div>
           <div className="columns is-mobile">
@@ -135,7 +147,7 @@ export default class UserForm extends React.Component {
           <button id="button" type="submit" className="button is-info">
             {signup && !profile ? "Sign Up" : "Update"}
           </button>
-          {valid ? null : <div className="column has-text-danger">{error}</div>}
+          {valid ? null : <div className={"column " + msgColor}>{message}</div>}
         </footer>
       </form>
     );

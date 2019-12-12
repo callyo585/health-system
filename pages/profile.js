@@ -1,10 +1,11 @@
 import Form from "../components/userform";
 import Router from "next/router";
-import { validateInput } from "../components/helper";
+import { validateInput, toggleButton } from "../components/helper";
 
 export default class Profile extends React.Component {
   state = {
     authUser: null,
+    msgColor: "",
     countries: [],
     statusCountries: null,
     gender: "",
@@ -67,6 +68,7 @@ export default class Profile extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    toggleButton("update");
 
     const { firebase } = this.props;
     const userData = this.state;
@@ -83,7 +85,8 @@ export default class Profile extends React.Component {
     };
 
     if (validateInput(update, "profile")) {
-      this.setState({ valid: false, error: validateInput(update) });
+      this.setState({ valid: false, message: validateInput(update, "profile"), msgColor: "has-text-danger" });
+      toggleButton("update");
       return false;
     }
 
@@ -97,6 +100,8 @@ export default class Profile extends React.Component {
           .doc(update.email)
           .set(update);
         console.log("user updated successfully");
+        toggleButton("update");
+        this.setState({ valid: true, message: "User Profile has been updated successfully", msgColor: "has-text-link" });
       })
       .catch(error => {
         // Handle Errors here.
@@ -114,7 +119,7 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, error, valid } = this.state;
+    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, message, valid, msgColor } = this.state;
     const { authUser } = this.props;
 
     const profileData = {
@@ -136,7 +141,7 @@ export default class Profile extends React.Component {
             <div className="container">
               <article className="panel is-link">
                 <p className="panel-heading">Profile Info</p>
-                <Form profile={profile} signup={signup} countries={countries} handleSubmit={this.handleSubmit} handleChange={this.handleChange} profileData={profileData} loading={loading} authUser={authUser} error={error} valid={valid} />
+                <Form profile={profile} signup={signup} countries={countries} handleSubmit={this.handleSubmit} handleChange={this.handleChange} profileData={profileData} loading={loading} authUser={authUser} message={message} valid={valid} msgColor={msgColor} />
               </article>
             </div>
           </div>

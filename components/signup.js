@@ -25,7 +25,8 @@ export default class Signup extends React.Component {
       signup: true,
       profile: false,
       valid: true,
-      error: ""
+      message: "",
+      msgColor: ""
     };
   }
 
@@ -53,7 +54,7 @@ export default class Signup extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ valid: true, error: "" });
+    this.setState({ valid: true, message: "" });
 
     const { firebase } = this.props;
     const userData = this.state;
@@ -72,7 +73,7 @@ export default class Signup extends React.Component {
     };
 
     if (validateInput(signUp, "signup")) {
-      this.setState({ valid: false, error: validateInput(signUp, "signup") });
+      this.setState({ valid: false, message: validateInput(signUp, "signup"), msgColor: "has-text-danger" });
       return false;
     }
 
@@ -121,13 +122,20 @@ export default class Signup extends React.Component {
           });
 
         toggleSignup();
+        toggleButton("signup");
         Router.push("/verification");
       })
       .catch(error => {
         // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        let message = "";
         console.error("Status ", errorCode, " : ", errorMessage);
+        if (errorCode.includes("email-already-in-use")) {
+          message = "Email is already registered in our system";
+        }
+        toggleButton("signup");
+        this.setState({ valid: false, message: message, msgColor: "has-text-danger" });
         // ...
       });
   };
@@ -139,7 +147,7 @@ export default class Signup extends React.Component {
   };
 
   render() {
-    const { countries, statusCountries, error, profile, signup, gender, username, email, age, country, race, height, weight, illness, password, confirmPass, valid } = this.state;
+    const { countries, statusCountries, message, profile, signup, gender, username, email, age, country, race, height, weight, illness, password, confirmPass, valid, msgColor } = this.state;
 
     const signupDetails = {
       gender,
@@ -163,7 +171,7 @@ export default class Signup extends React.Component {
             <p className="modal-card-title">Sign Up</p>
             <button className="delete" aria-label="close" onClick={toggleSignup}></button>
           </header>
-          <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} error={error} profile={profile} signup={signup} signupDetails={signupDetails} error={error} valid={valid} />
+          <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} profile={profile} signup={signup} signupDetails={signupDetails} message={message} valid={valid} msgColor={msgColor} />
         </div>
       </div>
     );
