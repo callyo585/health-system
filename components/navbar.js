@@ -3,17 +3,6 @@ import Signout from "./signout";
 import { toggleDropdown, toggleSignin, toggleSignup } from "./helper";
 
 export default class Navbar extends React.Component {
-  state = {
-    authUser: null
-  };
-
-  componentDidMount() {
-    const { firebase } = this.props;
-    firebase.auth().onAuthStateChanged(authUser => {
-      this.setState({ authUser });
-    });
-  }
-
   handleGetPath = path => {
     const { getPath } = this.props;
     getPath(path);
@@ -45,8 +34,7 @@ export default class Navbar extends React.Component {
   };
 
   render() {
-    const { firebase } = this.props;
-    const { authUser } = this.state;
+    const { firebase, authUser } = this.props;
 
     return (
       <nav className="navbar is-info" role="navigation" aria-label="main navigation">

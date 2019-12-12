@@ -3,7 +3,6 @@ import Router from "next/router";
 
 export default class Profile extends React.Component {
   state = {
-    authUser: null,
     countries: [],
     statusCountries: null,
     gender: "",
@@ -29,38 +28,36 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    const { getCountries, getCountriesStatus, firebase } = this.props;
+    const { getCountries, getCountriesStatus, firebase, authUser } = this.props;
 
-    firebase.auth().onAuthStateChanged(authUser => {
-      if (!authUser) {
-        Router.push("/");
-      } else if (!authUser.emailVerified) {
-        Router.push("/verification");
-      } else {
-        this.setState({ loading: true, authUser: authUser });
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(authUser.email)
-          .get()
-          .then(authUser => {
-            this.setState({
-              countries: getCountries,
-              statusCountries: getCountriesStatus,
-              gender: !!authUser.data().gender ? authUser.data().gender : "",
-              username: !!authUser.data().username ? authUser.data().username : "",
-              email: !!authUser.data().email ? authUser.data().email : "",
-              age: !!authUser.data().age ? authUser.data().age : 0,
-              country: !!authUser.data().country ? authUser.data().country : "",
-              race: !!authUser.data().race ? authUser.data().race : "",
-              height: !!authUser.data().height ? authUser.data().height : "",
-              weight: !!authUser.data().weight ? authUser.data().weight : "",
-              illness: !!authUser.data().illness ? authUser.data().illness : "",
-              loading: false
-            });
+    if (!authUser) {
+      Router.push("/");
+    } else if (!authUser.emailVerified) {
+      Router.push("/verification");
+    } else {
+      this.setState({ loading: true });
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(authUser.email)
+        .get()
+        .then(authUser => {
+          this.setState({
+            countries: getCountries,
+            statusCountries: getCountriesStatus,
+            gender: !!authUser.data().gender ? authUser.data().gender : "",
+            username: !!authUser.data().username ? authUser.data().username : "",
+            email: !!authUser.data().email ? authUser.data().email : "",
+            age: !!authUser.data().age ? authUser.data().age : 0,
+            country: !!authUser.data().country ? authUser.data().country : "",
+            race: !!authUser.data().race ? authUser.data().race : "",
+            height: !!authUser.data().height ? authUser.data().height : "",
+            weight: !!authUser.data().weight ? authUser.data().weight : "",
+            illness: !!authUser.data().illness ? authUser.data().illness : "",
+            loading: false
           });
-      }
-    });
+        });
+    }
   }
 
   handleSubmit = event => {
@@ -109,7 +106,8 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, authUser } = this.state;
+    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading } = this.state;
+    const { authUser } = this.props;
 
     const profileData = {
       gender,

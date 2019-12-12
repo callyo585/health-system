@@ -2,17 +2,6 @@ import { Section, ButtonSection } from "../components/section";
 import Router from "next/router";
 
 export default class Index extends React.Component {
-  state = {
-    authUser: null
-  };
-
-  componentDidMount() {
-    const { firebase } = this.props;
-    firebase.auth().onAuthStateChanged(authUser => {
-      this.setState({ authUser });
-    });
-  }
-
   render() {
     return (
       <div>

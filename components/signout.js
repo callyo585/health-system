@@ -10,6 +10,7 @@ export default class Signout extends React.Component {
       .then(response => {
         // Sign-out successful.
         console.log("user has logged out successfully");
+        Router.push("/signout");
       })
       .catch(error => {
         // An error happened.

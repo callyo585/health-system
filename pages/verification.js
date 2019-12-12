@@ -4,12 +4,10 @@ import { toggleButton } from "../components/helper";
 
 export default class Verification extends React.Component {
   componentDidMount() {
-    const { firebase } = this.props;
-    firebase.auth().onAuthStateChanged(authUser => {
-      if (authUser && authUser.emailVerified) {
-        Router.push("/");
-      }
-    });
+    const { authUser } = this.props;
+    if (!authUser) {
+      Router.push("/");
+    }
   }
 
   sendVerificationEmail = () => {
