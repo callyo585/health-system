@@ -31,7 +31,7 @@ export default class MyApp extends App {
           <title>{path ? "HappyFaces - " + path : "HappyFaces - Home"}</title>
         </Head>
         <Layout getPath={this.getPath} firebase={firebase} authUser={authUser}>
-          <Component {...pageProps} firebase={firebase} authUser={authUser} />
+          <Component {...pageProps} firebase={firebase} />
         </Layout>
       </React.Fragment>
     );

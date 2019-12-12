@@ -1,8 +1,10 @@
 import Form from "../components/userform";
 import Router from "next/router";
+import { validateInput } from "../components/helper";
 
 export default class Profile extends React.Component {
   state = {
+    authUser: null,
     countries: [],
     statusCountries: null,
     gender: "",
@@ -16,7 +18,8 @@ export default class Profile extends React.Component {
     illness: "",
     profile: true,
     signup: false,
-    loading: true
+    loading: true,
+    valid: true
   };
 
   static async getInitialProps() {
@@ -28,36 +31,38 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    const { getCountries, getCountriesStatus, firebase, authUser } = this.props;
+    const { getCountries, getCountriesStatus, firebase } = this.props;
 
-    if (!authUser) {
-      Router.push("/");
-    } else if (!authUser.emailVerified) {
-      Router.push("/verification");
-    } else {
-      this.setState({ loading: true });
-      firebase
-        .firestore()
-        .collection("users")
-        .doc(authUser.email)
-        .get()
-        .then(authUser => {
-          this.setState({
-            countries: getCountries,
-            statusCountries: getCountriesStatus,
-            gender: !!authUser.data().gender ? authUser.data().gender : "",
-            username: !!authUser.data().username ? authUser.data().username : "",
-            email: !!authUser.data().email ? authUser.data().email : "",
-            age: !!authUser.data().age ? authUser.data().age : 0,
-            country: !!authUser.data().country ? authUser.data().country : "",
-            race: !!authUser.data().race ? authUser.data().race : "",
-            height: !!authUser.data().height ? authUser.data().height : "",
-            weight: !!authUser.data().weight ? authUser.data().weight : "",
-            illness: !!authUser.data().illness ? authUser.data().illness : "",
-            loading: false
+    firebase.auth().onAuthStateChanged(authUser => {
+      if (!authUser) {
+        Router.replace("/");
+      } else if (!authUser.emailVerified) {
+        Router.replace("/verification");
+      } else {
+        this.setState({ loading: true });
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(authUser.email)
+          .get()
+          .then(authUser => {
+            this.setState({
+              countries: getCountries,
+              statusCountries: getCountriesStatus,
+              gender: !!authUser.data().gender ? authUser.data().gender : "",
+              username: !!authUser.data().username ? authUser.data().username : "",
+              email: !!authUser.data().email ? authUser.data().email : "",
+              age: !!authUser.data().age ? authUser.data().age : 0,
+              country: !!authUser.data().country ? authUser.data().country : "",
+              race: !!authUser.data().race ? authUser.data().race : "",
+              height: !!authUser.data().height ? authUser.data().height : "",
+              weight: !!authUser.data().weight ? authUser.data().weight : "",
+              illness: !!authUser.data().illness ? authUser.data().illness : "",
+              loading: false
+            });
           });
-        });
-    }
+      }
+    });
   }
 
   handleSubmit = event => {
@@ -74,10 +79,13 @@ export default class Profile extends React.Component {
       race: userData.race,
       height: userData.height,
       weight: userData.weight,
-      illness: userData.illness,
-      password: userData.password,
-      confirmPass: userData.confirmPass
+      illness: userData.illness
     };
+
+    if (validateInput(update, "profile")) {
+      this.setState({ valid: false, error: validateInput(update) });
+      return false;
+    }
 
     firebase
       .auth()
@@ -106,7 +114,7 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading } = this.state;
+    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, error, valid } = this.state;
     const { authUser } = this.props;
 
     const profileData = {
@@ -128,7 +136,7 @@ export default class Profile extends React.Component {
             <div className="container">
               <article className="panel is-link">
                 <p className="panel-heading">Profile Info</p>
-                <Form profile={profile} signup={signup} countries={countries} handleSubmit={this.handleSubmit} handleChange={this.handleChange} profileData={profileData} loading={loading} authUser={authUser} />
+                <Form profile={profile} signup={signup} countries={countries} handleSubmit={this.handleSubmit} handleChange={this.handleChange} profileData={profileData} loading={loading} authUser={authUser} error={error} valid={valid} />
               </article>
             </div>
           </div>

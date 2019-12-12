@@ -24,11 +24,9 @@ export default class UserForm extends React.Component {
             </div>
           </div>
           <div className="columns is-mobile">
-            <div className="column is-one-fifth">
-              Email<span className="has-text-danger">*</span> :
-            </div>
+            <div className="column is-one-fifth">Email {signup && !profile ? <span className="has-text-danger">*</span> : null} :</div>
             <div className="column">
-              <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={handleChange} value={signup && signupDetails ? signupDetails.email : profileData.email} />
+              <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={handleChange} value={signup && signupDetails ? signupDetails.email : profileData.email} disabled={profile && !signup} />
             </div>
           </div>
           <div className="columns is-mobile">
@@ -113,22 +111,24 @@ export default class UserForm extends React.Component {
               <input className="input is-info" type="text" placeholder="Physical and Mental(if any) e.g. Diabetes" name="illness" onChange={handleChange} value={signup && signupDetails ? signupDetails.illness : profileData.illness} />
             </div>
           </div>
-          <div className="columns is-mobile">
-            <div className="column is-one-fifth">Password{signup ? <span className="has-text-danger">*</span> : null} :</div>
-            <div className="column">
-              <input className="input is-info" type="password" placeholder="password" name="password" onChange={handleChange} value={signup && signupDetails ? signupDetails.password : ""}></input>
-            </div>
-          </div>
-          <div className="columns is-mobile">
-            <div className="column is-one-fifth">Confirm Password{signup ? <span className="has-text-danger">*</span> : null} :</div>
-            <div className="column">
-              <input className="input is-info" type="password" placeholder="confirm password" name="confirmPass" onChange={handleChange} value={signup && signupDetails ? signupDetails.confirmPass : ""}></input>
-            </div>
-          </div>
           {signup && !profile ? (
-            <div className="columns is-mobile">
-              <div className="column">By signing up, you agree to allow your personal information be collected for depression data analysis.</div>
-            </div>
+            <React.Fragment>
+              <div className="columns is-mobile">
+                <div className="column is-one-fifth">Password{signup ? <span className="has-text-danger">*</span> : null} :</div>
+                <div className="column">
+                  <input className="input is-info" type="password" placeholder="password" name="password" onChange={handleChange} value={signup && signupDetails ? signupDetails.password : ""}></input>
+                </div>
+              </div>
+              <div className="columns is-mobile">
+                <div className="column is-one-fifth">Confirm Password{signup ? <span className="has-text-danger">*</span> : null} :</div>
+                <div className="column">
+                  <input className="input is-info" type="password" placeholder="confirm password" name="confirmPass" onChange={handleChange} value={signup && signupDetails ? signupDetails.confirmPass : ""}></input>
+                </div>
+              </div>
+              <div className="columns is-mobile">
+                <div className="column">By signing up, you agree to allow your personal information be collected for depression data analysis.</div>
+              </div>
+            </React.Fragment>
           ) : null}
         </section>
         <footer className="modal-card-foot">

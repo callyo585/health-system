@@ -40,8 +40,9 @@ export default class Signin extends React.Component {
             toggleSignin();
             toggleButton("signin");
             this.setState({ email: "", password: "" });
-            Router.push("/profile");
           });
+
+        Router.replace("/profile");
       })
       .catch(error => {
         // Handle Errors here.

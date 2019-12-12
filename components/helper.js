@@ -71,7 +71,7 @@ export const toggleButton = button => {
   }
 };
 
-export const validateInput = input => {
+export const validateInput = (input, type) => {
   const usernameRegex = /^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$/;
   const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -119,15 +119,17 @@ export const validateInput = input => {
     return "Weight can only be a number!";
   }
 
-  if (input.password == "") {
-    return "Password cannot be empty!";
-  } else if (input.password.length < 6) {
-    return "Password length must be at least 6 characters!";
-  }
+  if (type == "signup") {
+    if (input.password == "") {
+      return "Password cannot be empty!";
+    } else if (input.password.length < 6) {
+      return "Password length must be at least 6 characters!";
+    }
 
-  if (input.confirmPass == "") {
-    return "Confirm Password cannot be empty!";
-  } else if (input.confirmPass != input.password) {
-    return "Password and Confirm Password do not match!";
+    if (input.confirmPass == "") {
+      return "Confirm Password cannot be empty!";
+    } else if (input.confirmPass != input.password) {
+      return "Password and Confirm Password do not match!";
+    }
   }
 };

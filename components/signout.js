@@ -7,10 +7,10 @@ export default class Signout extends React.Component {
     firebase
       .auth()
       .signOut()
-      .then(response => {
+      .then(async response => {
         // Sign-out successful.
-        console.log("user has logged out successfully");
-        Router.push("/signout");
+        await console.log("user has logged out successfully");
+        Router.replace("/signout");
       })
       .catch(error => {
         // An error happened.

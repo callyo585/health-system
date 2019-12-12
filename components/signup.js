@@ -71,8 +71,8 @@ export default class Signup extends React.Component {
       confirmPass: userData.confirmPass
     };
 
-    if (validateInput(signUp)) {
-      this.setState({ valid: false, error: validateInput(signUp) });
+    if (validateInput(signUp, "signup")) {
+      this.setState({ valid: false, error: validateInput(signUp, "signup") });
       return false;
     }
 
