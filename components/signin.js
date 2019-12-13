@@ -4,7 +4,6 @@ import { toggleSignin, toggleButton } from "./helper";
 
 export default class Signin extends React.Component {
   state = {
-    incorrect: false,
     email: "",
     password: "",
     error: null,
@@ -22,7 +21,6 @@ export default class Signin extends React.Component {
     };
 
     toggleButton("signin");
-
     firebase
       .auth()
       .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
@@ -63,7 +61,7 @@ export default class Signin extends React.Component {
         console.log(originalError);
 
         toggleButton("signin");
-        this.setState({ incorrect: true, error: errorMessage });
+        this.setState({ error: errorMessage });
       });
   };
 
@@ -74,7 +72,7 @@ export default class Signin extends React.Component {
   };
 
   render() {
-    const { incorrect, error, email, password, signin } = this.state;
+    const { error, email, password, signin } = this.state;
     return (
       <div className="modal" id="basicForm">
         <div className="modal-background" onClick={toggleSignin}></div>
@@ -83,7 +81,7 @@ export default class Signin extends React.Component {
             <p className="modal-card-title">Sign in</p>
             <button className="delete" aria-label="close" onClick={toggleSignin}></button>
           </header>
-          <Form incorrect={incorrect} error={error} email={email} password={password} signin={signin} handleChange={this.handleChange} handleSubmit={this.handleSubmit} toggleSignin={toggleSignin} />
+          <Form error={error} email={email} password={password} signin={signin} handleChange={this.handleChange} handleSubmit={this.handleSubmit} toggleSignin={toggleSignin} />
         </div>
       </div>
     );

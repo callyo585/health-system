@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default class BasicUserForm extends React.Component {
   render() {
-    const { incorrect, error, email, password, signin, handleChange, handleSubmit, toggleSignin, reset, display, resetMsg, resetColor } = this.props;
+    const { error, email, password, signin, handleChange, handleSubmit, toggleSignin, reset, display, resetMsg, resetColor } = this.props;
 
     return (
       <div className={reset} id="basicForm">
@@ -47,7 +47,7 @@ export default class BasicUserForm extends React.Component {
             <button id="signinButton" className="button is-info">
               Log in
             </button>
-            {incorrect ? <div className="column has-text-danger incorrect"> {error} </div> : null}
+            <div className="column has-text-danger incorrect"> {error} </div>
           </footer>
         </form>
       </div>
