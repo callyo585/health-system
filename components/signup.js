@@ -54,6 +54,7 @@ export default class Signup extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     this.setState({ message: "" });
+    toggleButton("signup");
 
     const { firebase } = this.props;
     const userData = this.state;
@@ -73,10 +74,9 @@ export default class Signup extends React.Component {
 
     if (validateInput(signUp, "signup")) {
       this.setState({ message: validateInput(signUp, "signup"), msgColor: "has-text-danger" });
+      toggleButton("signup");
       return false;
     }
-
-    toggleButton("signup");
 
     firebase
       .auth()

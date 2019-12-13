@@ -6,12 +6,13 @@ export default class Signin extends React.Component {
   state = {
     email: "",
     password: "",
-    error: null,
+    error: "",
     signin: true
   };
 
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ error: "" });
 
     const { firebase } = this.props;
     const userData = this.state;

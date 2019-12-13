@@ -24,9 +24,9 @@ export default class UserForm extends React.Component {
             </div>
           </div>
           <div className="columns is-mobile">
-            <div className="column is-one-fifth">Email {signup && !profile ? <span className="has-text-danger">*</span> : null} :</div>
+            <div className="column is-one-fifth">Email {signup ? <span className="has-text-danger">*</span> : null} :</div>
             <div className="column">
-              <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={handleChange} value={signup && signupDetails ? signupDetails.email : profileData.email} disabled={profile && !signup} />
+              <input className="input is-info" type="text" placeholder="e.g. example@example.com" name="email" onChange={handleChange} value={signup && signupDetails ? signupDetails.email : profileData.email} disabled={profile} />
             </div>
           </div>
           <div className="columns is-mobile">
@@ -123,7 +123,7 @@ export default class UserForm extends React.Component {
               <input className="input is-info" type="text" placeholder="Physical and Mental(if any) e.g. Diabetes" name="illness" onChange={handleChange} value={signup && signupDetails ? signupDetails.illness : profileData.illness} />
             </div>
           </div>
-          {signup && !profile ? (
+          {signup ? (
             <React.Fragment>
               <div className="columns is-mobile">
                 <div className="column is-one-fifth">Password{signup ? <span className="has-text-danger">*</span> : null} :</div>
@@ -144,8 +144,8 @@ export default class UserForm extends React.Component {
           ) : null}
         </section>
         <footer className="modal-card-foot">
-          <button id="button" type="submit" className="button is-info">
-            {signup && !profile ? "Sign Up" : "Update"}
+          <button id={signup ? "signupButton" : "updateButton"} type="submit" className="button is-info">
+            {signup ? "Sign Up" : "Update"}
           </button>
           <div className={"column " + msgColor}>{message}</div>
         </footer>

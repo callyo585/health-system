@@ -70,8 +70,12 @@ export const toggleButton = button => {
     document.getElementById("signinButton").classList.toggle("is-loading");
   }
 
-  if (button == "signup" || button == "update") {
-    document.getElementById("button").classList.toggle("is-loading");
+  if (button == "signup") {
+    document.getElementById("signupButton").classList.toggle("is-loading");
+  }
+
+  if (button == "update") {
+    document.getElementById("updateButton").classList.toggle("is-loading");
   }
 
   if (button == "verification") {

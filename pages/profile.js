@@ -20,6 +20,7 @@ export default class Profile extends React.Component {
     profile: true,
     signup: false,
     loading: true,
+    message: ""
   };
 
   static async getInitialProps() {
@@ -68,6 +69,7 @@ export default class Profile extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     toggleButton("update");
+    this.setState({ message: "" });
 
     const { firebase } = this.props;
     const userData = this.state;
@@ -96,11 +98,12 @@ export default class Profile extends React.Component {
       .set(update)
       .then(() => {
         console.log("user updated successfully");
-        toggleButton("update");
         this.setState({ message: "User Profile has been updated successfully", msgColor: "has-text-link" });
+        toggleButton("update");
       })
       .catch(error => {
         console.log("user is not updated successfully");
+        toggleButton("update");
         console.log(error.code, " : ", error.message);
       });
   };
