@@ -24,7 +24,6 @@ export default class Signup extends React.Component {
       confirmPass: "",
       signup: true,
       profile: false,
-      valid: true,
       message: "",
       msgColor: ""
     };
@@ -54,7 +53,7 @@ export default class Signup extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ valid: true, message: "" });
+    this.setState({ message: "" });
 
     const { firebase } = this.props;
     const userData = this.state;
@@ -73,7 +72,7 @@ export default class Signup extends React.Component {
     };
 
     if (validateInput(signUp, "signup")) {
-      this.setState({ valid: false, message: validateInput(signUp, "signup"), msgColor: "has-text-danger" });
+      this.setState({ message: validateInput(signUp, "signup"), msgColor: "has-text-danger" });
       return false;
     }
 
@@ -135,7 +134,7 @@ export default class Signup extends React.Component {
           message = "Email is already registered in our system";
         }
         toggleButton("signup");
-        this.setState({ valid: false, message: message, msgColor: "has-text-danger" });
+        this.setState({ message: message, msgColor: "has-text-danger" });
         // ...
       });
   };
@@ -171,7 +170,7 @@ export default class Signup extends React.Component {
             <p className="modal-card-title">Sign Up</p>
             <button className="delete" aria-label="close" onClick={toggleSignup}></button>
           </header>
-          <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} profile={profile} signup={signup} signupDetails={signupDetails} message={message} valid={valid} msgColor={msgColor} />
+          <Form countries={countries} handleChange={this.handleChange} handleSubmit={this.handleSubmit} profile={profile} signup={signup} signupDetails={signupDetails} message={message} msgColor={msgColor} />
         </div>
       </div>
     );

@@ -20,7 +20,6 @@ export default class Profile extends React.Component {
     profile: true,
     signup: false,
     loading: true,
-    valid: true
   };
 
   static async getInitialProps() {
@@ -85,30 +84,24 @@ export default class Profile extends React.Component {
     };
 
     if (validateInput(update, "profile")) {
-      this.setState({ valid: false, message: validateInput(update, "profile"), msgColor: "has-text-danger" });
+      this.setState({ message: validateInput(update, "profile"), msgColor: "has-text-danger" });
       toggleButton("update");
       return false;
     }
 
     firebase
-      .auth()
-      .createUserWithEmailAndPassword(update.email, update.password)
-      .then(response => {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(update.email)
-          .set(update);
+      .firestore()
+      .collection("users")
+      .doc(update.email)
+      .set(update)
+      .then(() => {
         console.log("user updated successfully");
         toggleButton("update");
-        this.setState({ valid: true, message: "User Profile has been updated successfully", msgColor: "has-text-link" });
+        this.setState({ message: "User Profile has been updated successfully", msgColor: "has-text-link" });
       })
       .catch(error => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.error("Status ", errorCode, " : ", errorMessage);
-        // ...
+        console.log("user is not updated successfully");
+        console.log(error.code, " : ", error.message);
       });
   };
 
@@ -119,7 +112,7 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, message, valid, msgColor } = this.state;
+    const { countries, profile, signup, gender, username, email, age, country, race, height, weight, illness, loading, message, msgColor } = this.state;
     const { authUser } = this.props;
 
     const profileData = {
@@ -141,7 +134,7 @@ export default class Profile extends React.Component {
             <div className="container">
               <article className="panel is-link">
                 <p className="panel-heading">Profile Info</p>
-                <Form profile={profile} signup={signup} countries={countries} handleSubmit={this.handleSubmit} handleChange={this.handleChange} profileData={profileData} loading={loading} authUser={authUser} message={message} valid={valid} msgColor={msgColor} />
+                <Form profile={profile} signup={signup} countries={countries} handleSubmit={this.handleSubmit} handleChange={this.handleChange} profileData={profileData} loading={loading} authUser={authUser} message={message} msgColor={msgColor} />
               </article>
             </div>
           </div>

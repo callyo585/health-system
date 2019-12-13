@@ -2,7 +2,7 @@ import { renderDropdown } from "./helper";
 
 export default class UserForm extends React.Component {
   render() {
-    const { handleChange, handleSubmit, countries, message, profile, signup, signupDetails, profileData, loading, valid, msgColor } = this.props;
+    const { handleChange, handleSubmit, countries, message, profile, signup, signupDetails, profileData, loading, msgColor } = this.props;
 
     if (loading) {
       return (
@@ -147,7 +147,7 @@ export default class UserForm extends React.Component {
           <button id="button" type="submit" className="button is-info">
             {signup && !profile ? "Sign Up" : "Update"}
           </button>
-          {valid ? null : <div className={"column " + msgColor}>{message}</div>}
+          <div className={"column " + msgColor}>{message}</div>
         </footer>
       </form>
     );
