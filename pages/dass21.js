@@ -20,29 +20,39 @@ export default class Profile extends React.Component {
     profile: true,
     signup: false,
     loading: true,
-    message: ""
+    message: "",
+    questions: null,
+    calculationSet: null,
+    score: null
   };
-
-  static async getInitialProps() {
-    const response = await fetch(
-      "https://restcountries.eu/rest/v2/all?fields=name;alpha3Code;"
-    );
-    const getCountriesStatus = response.status > 200 ? response.status : false;
-    const getCountries = await response.json();
-
-    return { getCountries, getCountriesStatus };
-  }
 
   componentDidMount() {
     const { getCountries, getCountriesStatus, firebase } = this.props;
 
+    firebase
+      .firestore()
+      .collection("dass21")
+      .doc("dass21")
+      .get()
+      .then(dass => {
+        this.setState({
+          questions: dass.data().questions,
+          score: dass.data().score
+        });
+      });
+
+    firebase
+      .firestore()
+      .collection("dass21")
+      .doc("calculationSet")
+      .get()
+      .then(calculationSet => {
+        this.setState({ calculationSet: calculationSet.data() });
+      });
+
     firebase.auth().onAuthStateChanged(authUser => {
       if (!authUser) {
         Router.replace("/");
-      } else if (!authUser.emailVerified) {
-        Router.replace("/verification");
-      } else if (!authUser.health) {
-        Router.replace("/dass21");
       } else {
         this.setState({ loading: true });
         firebase
@@ -126,62 +136,79 @@ export default class Profile extends React.Component {
     });
   };
 
-  render() {
-    const {
-      countries,
-      profile,
-      signup,
-      gender,
-      username,
-      email,
-      age,
-      country,
-      race,
-      height,
-      weight,
-      illness,
-      loading,
-      message,
-      msgColor
-    } = this.state;
-    const { authUser } = this.props;
+  handleSubmit = event => {
+    event.preventDefault();
+    // toggleButton("dass21");
+  };
 
-    const profileData = {
-      gender,
-      username,
-      email,
-      age,
-      country,
-      race,
-      height,
-      weight,
-      illness
-    };
+  render() {
+    const { questions, calculationSet, score } = this.state;
+    console.log("state --->", this.state);
+    console.log("questions --->", questions);
+    console.log("calculationSet --->", calculationSet);
+    console.log("score --->", score);
 
     return (
-      <React.Fragment>
+      <div>
         <section className="hero">
           <div className="hero-body">
             <div className="container">
-              <article className="panel is-link">
-                <p className="panel-heading">Profile Info</p>
-                <Form
-                  profile={profile}
-                  signup={signup}
-                  countries={countries}
-                  handleSubmit={this.handleSubmit}
-                  handleChange={this.handleChange}
-                  profileData={profileData}
-                  loading={loading}
-                  authUser={authUser}
-                  message={message}
-                  msgColor={msgColor}
-                />
-              </article>
+              <h1 className="subtitle">
+                We hope that you can answer the questions we have prepared below
+                so we can better undestand how do you feel:
+              </h1>
+              <form onSubmit={this.handleSubmit}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Question</th>
+                      {score
+                        ? score.map(option => {
+                            return <th>{option}</th>;
+                          })
+                        : null}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {questions
+                      ? questions.map((question, index) => {
+                          return (
+                            <tr>
+                              <th>{index + 1}</th>
+                              <td>{question}</td>
+                              {score.map((option, score) => {
+                                return (
+                                  <td style={{ textAlign: "center" }}>
+                                    <label>
+                                      <input
+                                        type="radio"
+                                        name={`answer${index}`}
+                                        value={score}
+                                        onChange={this.handleChange}
+                                      />
+                                    </label>
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          );
+                        })
+                      : "loading..."}
+                  </tbody>
+                </table>
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-link" id="dass21Button">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </section>
-      </React.Fragment>
+      </div>
     );
   }
 }

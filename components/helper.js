@@ -85,6 +85,10 @@ export const toggleButton = button => {
   if (button == "reset") {
     document.getElementById("resetButton").classList.toggle("is-loading");
   }
+
+  if (button == "dass21") {
+    document.getElementById("dass21Button").classList.toggle("is-loading");
+  }
 };
 
 export const validateInput = (input, type) => {
