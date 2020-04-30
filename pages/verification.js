@@ -4,9 +4,10 @@ import { toggleButton } from "../components/helper";
 
 export default class Verification extends React.Component {
   componentDidMount() {
-    const { firebase } = this.props;
-    firebase.auth().onAuthStateChanged(authUser => {
+    const { firebase, getPath } = this.props;
+    firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
+        getPath("/");
         Router.replace("/");
       }
     });
@@ -23,7 +24,7 @@ export default class Verification extends React.Component {
         console.log("Verification Email has been sent");
         toggleButton("verification");
       })
-      .catch(error => {
+      .catch((error) => {
         // An error happened.
         console.log("Error: ", error);
       });

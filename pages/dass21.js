@@ -1,10 +1,8 @@
-import Form from "../components/userform";
 import Router from "next/router";
-import { validateInput, toggleButton } from "../components/helper";
+import { toggleButton } from "../components/helper";
 
-export default class Profile extends React.Component {
+export default class Dass21 extends React.Component {
   state = {
-    authUser: null,
     msgColor: "",
     countries: [],
     statusCountries: null,
@@ -23,21 +21,23 @@ export default class Profile extends React.Component {
     message: "",
     questions: null,
     calculationSet: null,
-    score: null
+    score: null,
+    answers: [],
+    totalScores: [],
   };
 
   componentDidMount() {
-    const { getCountries, getCountriesStatus, firebase } = this.props;
+    const { getCountries, getCountriesStatus, firebase, getPath } = this.props;
 
     firebase
       .firestore()
       .collection("dass21")
       .doc("dass21")
       .get()
-      .then(dass => {
+      .then((dass) => {
         this.setState({
           questions: dass.data().questions,
-          score: dass.data().score
+          score: dass.data().score,
         });
       });
 
@@ -46,12 +46,13 @@ export default class Profile extends React.Component {
       .collection("dass21")
       .doc("calculationSet")
       .get()
-      .then(calculationSet => {
+      .then((calculationSet) => {
         this.setState({ calculationSet: calculationSet.data() });
       });
 
-    firebase.auth().onAuthStateChanged(authUser => {
+    firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
+        getPath("/");
         Router.replace("/");
       } else {
         this.setState({ loading: true });
@@ -60,7 +61,7 @@ export default class Profile extends React.Component {
           .collection("users")
           .doc(authUser.email)
           .get()
-          .then(authUser => {
+          .then((authUser) => {
             this.setState({
               countries: getCountries,
               statusCountries: getCountriesStatus,
@@ -75,78 +76,73 @@ export default class Profile extends React.Component {
               height: !!authUser.data().height ? authUser.data().height : "",
               weight: !!authUser.data().weight ? authUser.data().weight : "",
               illness: !!authUser.data().illness ? authUser.data().illness : "",
-              loading: false
+              loading: false,
             });
           });
       }
     });
   }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    toggleButton("update");
-    this.setState({ message: "" });
+  handleChange = (event) => {
+    let answers = [...this.state.answers];
+    let answer = event.target.value;
+    answers.push(answer);
+    this.setState({ answers });
+  };
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { answers, calculationSet } = this.state;
     const { firebase } = this.props;
-    const userData = this.state;
-    const update = {
-      username: userData.username,
-      email: userData.email,
-      age: userData.age,
-      gender: userData.gender,
-      country: userData.country,
-      race: userData.race,
-      height: userData.height,
-      weight: userData.weight,
-      illness: userData.illness
-    };
-
-    if (validateInput(update, "profile")) {
-      this.setState({
-        message: validateInput(update, "profile"),
-        msgColor: "has-text-danger"
-      });
-      toggleButton("update");
-      return false;
-    }
-
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(update.email)
-      .set(update)
-      .then(() => {
-        console.log("user updated successfully");
-        this.setState({
-          message: "User Profile has been updated successfully",
-          msgColor: "has-text-link"
+    let anxiety = 0;
+    let depression = 0;
+    let stress = 0;
+    if (answers.length < 21) {
+      this.setState({ error: "Please answer all the questions provided." });
+    } else {
+      answers.forEach((answer, index) => {
+        calculationSet.anxiety.forEach((question) => {
+          if (index + 1 == question) {
+            anxiety += parseInt(answer);
+          }
         });
-        toggleButton("update");
-      })
-      .catch(error => {
-        console.log("user is not updated successfully");
-        toggleButton("update");
-        console.log(error.code, " : ", error.message);
+
+        calculationSet.depression.forEach((question) => {
+          if (index + 1 == question) {
+            depression += parseInt(answer);
+          }
+        });
+
+        calculationSet.stress.forEach((question) => {
+          if (index + 1 == question) {
+            stress += parseInt(answer);
+          }
+        });
       });
-  };
 
-  handleChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
+      let totalScores = {
+        anxiety: anxiety * 2,
+        depression: depression * 2,
+        stress: stress * 2,
+      };
+      this.setState({ totalScores: totalScores, error: "" });
 
-  handleSubmit = event => {
-    event.preventDefault();
-    // toggleButton("dass21");
+      toggleButton("dass21");
+
+      firebase
+        .firestore()
+        .collection("users")
+        .doc(this.state.email)
+        .set(totalScores, { merge: true })
+        .then(() => {
+          toggleButton("dass21");
+          Router.replace("/dass21results");
+        });
+    }
   };
 
   render() {
-    const { questions, calculationSet, score } = this.state;
-    console.log("state --->", this.state);
-    console.log("questions --->", questions);
-    console.log("calculationSet --->", calculationSet);
-    console.log("score --->", score);
+    const { questions, score, error } = this.state;
 
     return (
       <div>
@@ -164,8 +160,8 @@ export default class Profile extends React.Component {
                       <th>No.</th>
                       <th>Question</th>
                       {score
-                        ? score.map(option => {
-                            return <th>{option}</th>;
+                        ? score.map((option) => {
+                            return <th key={option}>{option}</th>;
                           })
                         : null}
                     </tr>
@@ -174,16 +170,18 @@ export default class Profile extends React.Component {
                     {questions
                       ? questions.map((question, index) => {
                           return (
-                            <tr>
+                            <tr key={question}>
                               <th>{index + 1}</th>
                               <td>{question}</td>
                               {score.map((option, score) => {
                                 return (
-                                  <td style={{ textAlign: "center" }}>
+                                  <td
+                                    style={{ textAlign: "center" }}
+                                    key={option}>
                                     <label>
                                       <input
                                         type="radio"
-                                        name={`answer${index}`}
+                                        name={index + 1}
                                         value={score}
                                         onChange={this.handleChange}
                                       />
@@ -197,11 +195,14 @@ export default class Profile extends React.Component {
                       : "loading..."}
                   </tbody>
                 </table>
-                <div class="field is-grouped">
-                  <div class="control">
-                    <button class="button is-link" id="dass21Button">
+                <div className="field is-grouped">
+                  <div className="control">
+                    <button className="button is-link" id="dass21Button">
                       Submit
                     </button>
+                  </div>
+                  <div className="column has-text-danger incorrect">
+                    {error}
                   </div>
                 </div>
               </form>

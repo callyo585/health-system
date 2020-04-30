@@ -24,7 +24,7 @@ export const renderDropdown = (category, data) => {
       break;
     case "race":
       const races = ["Chinese", "Malay", "Indian", "Others"];
-      races.map(race => {
+      races.map((race) => {
         select.push(
           <option value={race} key={race}>
             {race}
@@ -34,9 +34,9 @@ export const renderDropdown = (category, data) => {
     case "gender":
       const genders = [
         { name: "Male", code: "M" },
-        { name: "Female", code: "F" }
+        { name: "Female", code: "F" },
       ];
-      genders.map(gender => {
+      genders.map((gender) => {
         select.push(
           <option value={gender.code} key={gender.code}>
             {gender.name}
@@ -45,7 +45,7 @@ export const renderDropdown = (category, data) => {
       });
   }
 
-  const options = select.map(option => {
+  const options = select.map((option) => {
     return option;
   });
 
@@ -65,7 +65,7 @@ export const toggleSignup = () => {
   document.getElementById("signup").classList.toggle("is-active");
 };
 
-export const toggleButton = button => {
+export const toggleButton = (button) => {
   if (button == "signin") {
     document.getElementById("signinButton").classList.toggle("is-loading");
   }

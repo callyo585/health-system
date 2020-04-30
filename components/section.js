@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export const Section = props => (
+export const Section = (props) => (
   <section className="hero">
     <div className="hero-body">
       <div className="container">
@@ -11,16 +11,46 @@ export const Section = props => (
   </section>
 );
 
-export const ButtonSection = props => (
+export const ButtonSection = (props) => (
   <section className="hero">
     <div className="hero-body">
       <div className="container">
         <h1 className="title">{props.title}</h1>
         <Link href={props.href}>
-          <button id="verification" className="button is-primary signout" onClick={props.onClick}>
+          <button
+            id="verification"
+            className="button is-primary signout"
+            onClick={props.onClick}>
             <strong>{props.button}</strong>
           </button>
         </Link>
+      </div>
+    </div>
+    <style jsx>
+      {`
+        .container {
+          text-align: center;
+        }
+        .signout {
+          font-family: "McLaren", cursive;
+          color: white;
+        }
+      `}
+    </style>
+  </section>
+);
+
+export const ButtonSectionNoLink = (props) => (
+  <section className="hero">
+    <div className="hero-body">
+      <div className="container">
+        <h1 className="title">{props.title}</h1>
+        <button
+          id="verification"
+          className="button is-primary signout"
+          onClick={props.onClick}>
+          <strong>{props.button}</strong>
+        </button>
       </div>
     </div>
     <style jsx>

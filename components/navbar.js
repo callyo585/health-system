@@ -3,7 +3,7 @@ import Signout from "./signout";
 import { toggleDropdown, toggleSignin, toggleSignup } from "./helper";
 
 export default class Navbar extends React.Component {
-  handleGetPath = path => {
+  handleGetPath = (path) => {
     const { getPath } = this.props;
     getPath(path);
   };
@@ -18,6 +18,15 @@ export default class Navbar extends React.Component {
               this.handleGetPath("Profile");
             }}>
             Profile
+          </a>
+        </Link>
+        <Link href="/dass21">
+          <a
+            className="navbar-item"
+            onClick={() => {
+              this.handleGetPath("Dass21");
+            }}>
+            Questionnaire
           </a>
         </Link>
         <Link href="/dotprobe">
@@ -37,7 +46,10 @@ export default class Navbar extends React.Component {
     const { firebase, authUser } = this.props;
 
     return (
-      <nav className="navbar is-info" role="navigation" aria-label="main navigation">
+      <nav
+        className="navbar is-info"
+        role="navigation"
+        aria-label="main navigation">
         <div className="navbar-brand">
           <div className="navbar-item">
             <img src="./smiley128.png" width="30" height="28"></img>
@@ -62,27 +74,34 @@ export default class Navbar extends React.Component {
 
         <div id="navbarBasicExample" className="navbar-menu">
           <div className="navbar-start">
-            <Link href="/">
-              <a
-                className="navbar-item"
-                onClick={() => {
-                  this.handleGetPath("Home");
-                }}>
-                Home
-              </a>
-            </Link>
+            {authUser &&
+            authUser.email == "superadmin@superadmin.com" ? null : (
+              <React.Fragment>
+                <Link href="/">
+                  <a
+                    className="navbar-item"
+                    onClick={() => {
+                      this.handleGetPath("Home");
+                    }}>
+                    Home
+                  </a>
+                </Link>
 
-            <Link href="/about">
-              <a
-                className="navbar-item"
-                onClick={() => {
-                  this.handleGetPath("About");
-                }}>
-                About Us
-              </a>
-            </Link>
+                <Link href="/about">
+                  <a
+                    className="navbar-item"
+                    onClick={() => {
+                      this.handleGetPath("About");
+                    }}>
+                    About Us
+                  </a>
+                </Link>
+              </React.Fragment>
+            )}
 
-            {authUser ? this.inSession() : null}
+            {authUser && authUser.email != "superadmin@superadmin.com"
+              ? this.inSession()
+              : null}
           </div>
 
           <div className="navbar-end">

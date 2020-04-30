@@ -7,10 +7,10 @@ export default class Signin extends React.Component {
     email: "",
     password: "",
     error: "",
-    signin: true
+    signin: true,
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ error: "" });
 
@@ -18,7 +18,7 @@ export default class Signin extends React.Component {
     const userData = this.state;
     const signin = {
       email: userData.email,
-      password: userData.password
+      password: userData.password,
     };
 
     toggleButton("signin");
@@ -34,16 +34,20 @@ export default class Signin extends React.Component {
         await firebase
           .auth()
           .signInWithEmailAndPassword(signin.email, signin.password)
-          .then(response => {
+          .then((response) => {
             console.log("user has logged in successfully");
             toggleSignin();
             toggleButton("signin");
             this.setState({ email: "", password: "" });
           });
 
-        Router.replace("/profile");
+        if (signin.email == "superadmin@superadmin.com") {
+          Router.replace("/admin");
+        } else {
+          Router.replace("/profile");
+        }
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle Errors here.
         let errorMessage = null;
         if (error.code.includes("email")) {
@@ -66,9 +70,9 @@ export default class Signin extends React.Component {
       });
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -80,9 +84,20 @@ export default class Signin extends React.Component {
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">Sign in</p>
-            <button className="delete" aria-label="close" onClick={toggleSignin}></button>
+            <button
+              className="delete"
+              aria-label="close"
+              onClick={toggleSignin}></button>
           </header>
-          <Form error={error} email={email} password={password} signin={signin} handleChange={this.handleChange} handleSubmit={this.handleSubmit} toggleSignin={toggleSignin} />
+          <Form
+            error={error}
+            email={email}
+            password={password}
+            signin={signin}
+            handleChange={this.handleChange}
+            handleSubmit={this.handleSubmit}
+            toggleSignin={toggleSignin}
+          />
         </div>
       </div>
     );

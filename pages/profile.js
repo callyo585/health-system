@@ -17,10 +17,13 @@ export default class Profile extends React.Component {
     height: "",
     weight: "",
     illness: "",
+    anxiety: "",
+    depression: "",
+    stress: "",
     profile: true,
     signup: false,
     loading: true,
-    message: ""
+    message: "",
   };
 
   static async getInitialProps() {
@@ -34,15 +37,15 @@ export default class Profile extends React.Component {
   }
 
   componentDidMount() {
-    const { getCountries, getCountriesStatus, firebase } = this.props;
+    const { getCountries, getCountriesStatus, firebase, getPath } = this.props;
 
-    firebase.auth().onAuthStateChanged(authUser => {
+    firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
+        getPath("/");
         Router.replace("/");
       } else if (!authUser.emailVerified) {
+        getPath("/verification");
         Router.replace("/verification");
-      } else if (!authUser.health) {
-        Router.replace("/dass21");
       } else {
         this.setState({ loading: true });
         firebase
@@ -50,29 +53,63 @@ export default class Profile extends React.Component {
           .collection("users")
           .doc(authUser.email)
           .get()
-          .then(authUser => {
-            this.setState({
-              countries: getCountries,
-              statusCountries: getCountriesStatus,
-              gender: !!authUser.data().gender ? authUser.data().gender : "",
-              username: !!authUser.data().username
-                ? authUser.data().username
-                : "",
-              email: !!authUser.data().email ? authUser.data().email : "",
-              age: !!authUser.data().age ? authUser.data().age : 0,
-              country: !!authUser.data().country ? authUser.data().country : "",
-              race: !!authUser.data().race ? authUser.data().race : "",
-              height: !!authUser.data().height ? authUser.data().height : "",
-              weight: !!authUser.data().weight ? authUser.data().weight : "",
-              illness: !!authUser.data().illness ? authUser.data().illness : "",
-              loading: false
-            });
+          .then((authUser) => {
+            if (
+              !authUser.data().anxiety ||
+              !authUser.data().depression ||
+              !authUser.data().stress
+            ) {
+              Router.replace("/dass21");
+            } else {
+              firebase
+                .firestore()
+                .collection("dass21")
+                .doc("range")
+                .get()
+                .then((range) => {
+                  this.setState({
+                    countries: getCountries,
+                    statusCountries: getCountriesStatus,
+                    gender: !!authUser.data().gender
+                      ? authUser.data().gender
+                      : "",
+                    username: !!authUser.data().username
+                      ? authUser.data().username
+                      : "",
+                    email: !!authUser.data().email ? authUser.data().email : "",
+                    age: !!authUser.data().age ? authUser.data().age : 0,
+                    country: !!authUser.data().country
+                      ? authUser.data().country
+                      : "",
+                    race: !!authUser.data().race ? authUser.data().race : "",
+                    height: !!authUser.data().height
+                      ? authUser.data().height
+                      : "",
+                    weight: !!authUser.data().weight
+                      ? authUser.data().weight
+                      : "",
+                    illness: !!authUser.data().illness
+                      ? authUser.data().illness
+                      : "",
+                    anxiety: !!authUser.data().anxiety
+                      ? range.data().anxiety[authUser.data().anxiety]
+                      : "",
+                    depression: !!authUser.data().depression
+                      ? range.data().depression[authUser.data().depression]
+                      : "",
+                    stress: !!authUser.data().stress
+                      ? range.data().stress[authUser.data().stress]
+                      : "",
+                    loading: false,
+                  });
+                });
+            }
           });
       }
     });
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     toggleButton("update");
     this.setState({ message: "" });
@@ -88,13 +125,13 @@ export default class Profile extends React.Component {
       race: userData.race,
       height: userData.height,
       weight: userData.weight,
-      illness: userData.illness
+      illness: userData.illness,
     };
 
     if (validateInput(update, "profile")) {
       this.setState({
         message: validateInput(update, "profile"),
-        msgColor: "has-text-danger"
+        msgColor: "has-text-danger",
       });
       toggleButton("update");
       return false;
@@ -104,25 +141,25 @@ export default class Profile extends React.Component {
       .firestore()
       .collection("users")
       .doc(update.email)
-      .set(update)
+      .set(update, { merge: true })
       .then(() => {
         console.log("user updated successfully");
         this.setState({
           message: "User Profile has been updated successfully",
-          msgColor: "has-text-link"
+          msgColor: "has-text-link",
         });
         toggleButton("update");
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("user is not updated successfully");
         toggleButton("update");
         console.log(error.code, " : ", error.message);
       });
   };
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -140,9 +177,12 @@ export default class Profile extends React.Component {
       height,
       weight,
       illness,
+      anxiety,
+      depression,
+      stress,
       loading,
       message,
-      msgColor
+      msgColor,
     } = this.state;
     const { authUser } = this.props;
 
@@ -155,7 +195,10 @@ export default class Profile extends React.Component {
       race,
       height,
       weight,
-      illness
+      illness,
+      anxiety,
+      depression,
+      stress,
     };
 
     return (

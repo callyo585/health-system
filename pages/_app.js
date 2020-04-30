@@ -8,16 +8,16 @@ import "../styles/styles.scss";
 export default class MyApp extends App {
   state = {
     path: null,
-    authUser: null
+    authUser: null,
   };
 
   componentDidMount() {
-    firebase.auth().onAuthStateChanged(authUser => {
+    firebase.auth().onAuthStateChanged((authUser) => {
       this.setState({ authUser });
     });
   }
 
-  getPath = path => {
+  getPath = (path) => {
     this.setState({ path });
   };
 
@@ -30,8 +30,16 @@ export default class MyApp extends App {
         <Head>
           <title>{path ? "HappyFaces - " + path : "HappyFaces - Home"}</title>
         </Head>
-        <Layout getPath={this.getPath} firebase={firebase} authUser={authUser}>
-          <Component {...pageProps} firebase={firebase} />
+        <Layout
+          getPath={this.getPath}
+          firebase={firebase}
+          authUser={authUser}
+          path={path}>
+          <Component
+            {...pageProps}
+            firebase={firebase}
+            getPath={this.getPath}
+          />
         </Layout>
       </React.Fragment>
     );
