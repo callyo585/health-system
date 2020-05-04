@@ -39,6 +39,7 @@ export default class MyApp extends App {
             {...pageProps}
             firebase={firebase}
             getPath={this.getPath}
+            path={path}
           />
         </Layout>
       </React.Fragment>

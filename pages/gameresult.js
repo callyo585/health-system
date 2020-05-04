@@ -12,10 +12,10 @@ export default class GameResult extends React.Component {
 
     firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
-        getPath("/");
+        getPath("Home");
         Router.replace("/");
       } else if (!authUser.emailVerified) {
-        getPath("/verification");
+        getPath("Verification");
         Router.replace("/verification");
       } else {
         this.setState({ loading: true });
@@ -30,6 +30,7 @@ export default class GameResult extends React.Component {
               !authUser.data().depression ||
               !authUser.data().stress
             ) {
+              getPath("Dass21");
               Router.replace("/dass21");
             } else {
               firebase

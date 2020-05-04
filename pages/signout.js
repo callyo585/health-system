@@ -13,7 +13,7 @@ export default class Signout extends React.Component {
         button="Return to Home"
         href="/"
         onClick={() => {
-          this.handleGetPath("/");
+          this.handleGetPath("Home");
         }}
       />
     );

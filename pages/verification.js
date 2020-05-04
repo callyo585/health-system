@@ -3,11 +3,14 @@ import Router from "next/router";
 import { toggleButton } from "../components/helper";
 
 export default class Verification extends React.Component {
+  state = {
+    sent: false,
+  };
   componentDidMount() {
     const { firebase, getPath } = this.props;
     firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
-        getPath("/");
+        getPath("Home");
         Router.replace("/");
       }
     });
@@ -31,10 +34,15 @@ export default class Verification extends React.Component {
   };
 
   render() {
+    console.log(this.props);
     return (
       <ButtonSection
-        title="Please verify your email, and your sign up will be completed"
-        button="Send Verification Email"
+        title="Please verify your email, and your sign up will be completed. (Check spam/junk mail if unable to find email)"
+        button={
+          !this.state.sent
+            ? "Send Verification Email"
+            : "Resend Verification Email"
+        }
         onClick={() => {
           toggleButton("verification");
           this.sendVerificationEmail();

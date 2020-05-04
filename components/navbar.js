@@ -87,7 +87,7 @@ export default class Navbar extends React.Component {
                   </a>
                 </Link>
 
-                <Link href="/about">
+                {/* <Link href="/about">
                   <a
                     className="navbar-item"
                     onClick={() => {
@@ -95,7 +95,7 @@ export default class Navbar extends React.Component {
                     }}>
                     About Us
                   </a>
-                </Link>
+                </Link> */}
               </React.Fragment>
             )}
 

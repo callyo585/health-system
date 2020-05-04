@@ -52,7 +52,7 @@ export default class Dass21 extends React.Component {
 
     firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
-        getPath("/");
+        getPath("Home");
         Router.replace("/");
       } else {
         this.setState({ loading: true });
@@ -93,7 +93,7 @@ export default class Dass21 extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const { answers, calculationSet } = this.state;
-    const { firebase } = this.props;
+    const { firebase, getPath } = this.props;
     let anxiety = 0;
     let depression = 0;
     let stress = 0;
@@ -136,6 +136,7 @@ export default class Dass21 extends React.Component {
         .set(totalScores, { merge: true })
         .then(() => {
           toggleButton("dass21");
+          getPath("Dass21Results");
           Router.replace("/dass21results");
         });
     }

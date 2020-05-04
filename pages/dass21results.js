@@ -15,7 +15,7 @@ export default class Dass21Results extends React.Component {
     const { firebase, getPath } = this.props;
     firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
-        getPath("/");
+        getPath("Home");
         Router.replace("/");
       } else {
         this.setState({ loading: true });

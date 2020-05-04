@@ -41,10 +41,10 @@ export default class Profile extends React.Component {
 
     firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
-        getPath("/");
+        getPath("Home");
         Router.replace("/");
       } else if (!authUser.emailVerified) {
-        getPath("/verification");
+        getPath("Verification");
         Router.replace("/verification");
       } else {
         this.setState({ loading: true });
@@ -59,6 +59,7 @@ export default class Profile extends React.Component {
               !authUser.data().depression ||
               !authUser.data().stress
             ) {
+              getPath("Dass21");
               Router.replace("/dass21");
             } else {
               firebase
@@ -92,13 +93,26 @@ export default class Profile extends React.Component {
                       ? authUser.data().illness
                       : "",
                     anxiety: !!authUser.data().anxiety
-                      ? range.data().anxiety[authUser.data().anxiety]
+                      ? range.data().anxiety[
+                          authUser.data().anxiety <= range.data().anxiety.length
+                            ? authUser.data().anxiety
+                            : range.data().anxiety.length - 1
+                        ]
                       : "",
                     depression: !!authUser.data().depression
-                      ? range.data().depression[authUser.data().depression]
+                      ? range.data().depression[
+                          authUser.data().depression <=
+                          range.data().depression.length
+                            ? authUser.data().depression
+                            : range.data().depression.length - 1
+                        ]
                       : "",
                     stress: !!authUser.data().stress
-                      ? range.data().stress[authUser.data().stress]
+                      ? range.data().stress[
+                          authUser.data().stress <= range.data().stress.length
+                            ? authUser.data().stress
+                            : range.data().stress.length - 1
+                        ]
                       : "",
                     loading: false,
                   });

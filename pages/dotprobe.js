@@ -35,10 +35,10 @@ export default class DotProbe extends React.Component {
     const { firebase, getPath } = this.props;
     firebase.auth().onAuthStateChanged((authUser) => {
       if (!authUser) {
-        getPath("/");
+        getPath("Home");
         Router.replace("/");
       } else if (!authUser.emailVerified) {
-        getPath("/verification");
+        getPath("Verification");
         Router.replace("/verification");
       } else {
         this.setState({ email: authUser.email });
@@ -73,7 +73,7 @@ export default class DotProbe extends React.Component {
 
   continueTimer = () => {
     const { timerTime, resultTime, setCount, email } = this.state;
-    const { firebase } = this.props;
+    const { firebase, getPath } = this.props;
     let resultTimeSeconds = timerTime / 1000;
     const newResultTime = [...resultTime, resultTimeSeconds];
     this.setState({ resultTime: newResultTime, setCount: setCount + 1 }, () => {
@@ -142,6 +142,7 @@ export default class DotProbe extends React.Component {
           .doc(currentTime)
           .set(gameResults, { merge: true })
           .then(() => {
+            getPath("GameResult");
             Router.replace("/gameresult");
           });
       }
