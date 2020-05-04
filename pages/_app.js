@@ -7,7 +7,7 @@ import "../styles/styles.scss";
 
 export default class MyApp extends App {
   state = {
-    path: null,
+    path: "Home",
     authUser: null,
   };
 

@@ -2,17 +2,18 @@ import Router from "next/router";
 
 export default class Signout extends React.Component {
   handleSignout = () => {
-    const { firebase } = this.props;
+    const { firebase, getPath } = this.props;
 
     firebase
       .auth()
       .signOut()
-      .then(async response => {
+      .then(async (response) => {
         // Sign-out successful.
         await console.log("user has logged out successfully");
+        getPath("Signout");
         Router.replace("/signout");
       })
-      .catch(error => {
+      .catch((error) => {
         // An error happened.
       });
   };

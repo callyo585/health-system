@@ -14,7 +14,7 @@ export default class Signin extends React.Component {
     event.preventDefault();
     this.setState({ error: "" });
 
-    const { firebase } = this.props;
+    const { firebase, getPath } = this.props;
     const userData = this.state;
     const signin = {
       email: userData.email,
@@ -42,8 +42,10 @@ export default class Signin extends React.Component {
           });
 
         if (signin.email == "superadmin@superadmin.com") {
+          getPath("Admin");
           Router.replace("/admin");
         } else {
+          getPath("Profile");
           Router.replace("/profile");
         }
       })

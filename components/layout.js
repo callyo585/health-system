@@ -8,10 +8,10 @@ export default ({ children, getPath, firebase, authUser, path }) => (
       <Navbar getPath={getPath} firebase={firebase} authUser={authUser} />
     </header>
 
-    <SignupForm firebase={firebase} />
-    <SigninForm firebase={firebase} />
+    <SignupForm firebase={firebase} getPath={getPath} />
+    <SigninForm firebase={firebase} getPath={getPath} />
     {children}
-    {path == "Dotprobe" || path == "Dass21" || path == "Profile" ? null : (
+    {path != "Home" ? null : (
       <footer
         className="footer"
         style={{ position: "fixed", left: 0, bottom: 0 }}>
