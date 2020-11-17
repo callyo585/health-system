@@ -207,6 +207,13 @@ export default class Signup extends React.Component {
             msgColor={msgColor}
           />
         </div>
+        <style jsx>
+          {`
+            .modal-card {
+              overflow: auto;
+            }
+          `}
+        </style>
       </div>
     );
   }
